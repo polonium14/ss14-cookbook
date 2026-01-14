@@ -1,4 +1,4 @@
-name: CD
+name: Linter
 on:
   push:
     branches:
@@ -24,14 +24,14 @@ jobs:
       - name: Run Linter
         run: npm run lint
 
-      - name: Deploy via SSH
-        if: success()
-        uses: appleboy/ssh-action@v1.2.4
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd /var/www/ss14-cookbook/
-            sh ./deploy.sh
+    #   - name: Deploy via SSH
+    #     if: success()
+    #     uses: appleboy/ssh-action@v1.2.4
+    #     with:
+    #       host: ${{ secrets.SSH_HOST }}
+    #       username: ${{ secrets.SSH_USERNAME }}
+    #       key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #       port: ${{ secrets.SSH_PORT }}
+    #       script: |
+    #         cd /var/www/ss14-cookbook/
+    #         sh ./deploy.sh

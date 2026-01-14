@@ -1,0 +1,98 @@
+base:
+  name: "Polonium"
+  description: "Polski fork"
+  path: "../repo"
+  repo: "polonium14/polonium-station"
+  locale: "pl-PL"
+  default: true
+  methodEntities: &baseMethods
+    microwave: KitchenMicrowave
+    mix: LargeBeaker
+    cut: KitchenKnife
+    roll: RollingPin
+    heat: KitchenElectricGrill
+    heatMixture: ChemistryHotplate
+    stir: Spoon
+    shake: DrinkShaker
+    construct: ClothingHeadHatChef # general recipes
+    deepFry: null
+  mixFillState: beakerlarge4
+  specialDiets:
+    - &reptilianDiet
+      organ: OrganReptilianStomach
+      color: "#2e6b2e"
+      hint: "Reptilians can eat this food."
+      filterName: "Reptilian-edible"
+      filterSummary: "reptilian-edible"
+    - &mothDiet
+      organ: OrganMothStomach
+      color: "#e3c7aa"
+      hint: "Moths can eat this food."
+      filterName: "Moth-edible"
+      filterSummary: "moth-edible"
+  specialReagents:
+    - &theobromine
+      id: Theobromine
+      color: "#b9643b"
+      hint: "This food contains theobromine, poisonous to some species."
+      filterName: "Contains Theobromine"
+      filterSummary: "theobromine-containing"
+  sortingIdRewrites: &baseRewrites
+    - "rewrites_base.yml"
+  ignoredSpecialRecipes: &ignoredSpecialRecipes
+    # These eggs look indistinguishable from regular FoodEgg, and the recipes
+    # as a result are also seemingly identical. To avoid confusing people with
+    # three identical egg ingredients and three identical boiled egg recipes,
+    # we ignore these recipes altogether.
+    - heat!FoodEggChickenFertilized
+    - heat!FoodEggDuckFertilized
+  ignoredFoodSequenceElements: &ignoredFoodSequenceElements
+    # Ultra-rare botany mutation.
+    - FoodExtradimensionalOrange
+    # MobMouse is included, don't need all the other mice.
+    - MobMouseDead
+    - MobMouse1
+    - MobMouse2
+    - MobMouseCancer
+    - MobMouseAdmeme
+    # Looks identical to FoodRealCapfruit (the one that shoots blanks).
+    - FoodFakeCapfruit
+    # Ew. You can discover these on your own!
+    - OrganDionaBrain
+    - OrganDionaBrainNymph
+    - OrganHumanBrain
+    - SentientSlimeCore
+    - SentientSlimesCore
+  ignoreSourcesOf: &ignoredSources
+    # These reagents bloat the list without providing anything especially useful.
+    - Blood
+    - Nutriment
+    - Vitamin
+    - Water
+    # These have sources that are too rare or weird to be meaningful.
+    - Chlorine # blue pumpkin, rare botany mutation
+    - Gold # golden apple, rare botany mutation; trivially obtained from gold
+    - Nothing # borderline meme reagent
+    - Saline # pickle (Frontier); trivially made with salt + water
+    - UncookedAnimalProteins # meatwheat, rare botany mutation; trivially obtained from meat
+    - Wine # holymelon, rare botany mutation; trivially obtained from bar
+  forceIncludeReagentSources: &reagentSources
+    # Eggs can be trivially cracked into raw egg.
+    Egg: [FoodEgg]
+  spriteOffsets: &standardSpriteOffsets
+    # Table-mounted machines are all weirdly high up
+    # microwave has been fixed
+    KitchenElectricGrill: [0, 5]
+    KitchenAssembler: [0, 5]
+    ChemistryHotplate: [0, 5]
+
+    # Same with these two burgers
+    FoodBurgerSuper: [0, 5] # super bite burger
+    FoodBurgerBig: [0, 4] # big bite burger
+
+    # Aloe is weirdly low down
+    FoodAloe: [0, -4]
+    AloeCream: [0, -2]
+
+    # Let's lower the shaker a few pixels too
+    DrinkShaker: [0, 3]

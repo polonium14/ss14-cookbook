@@ -9,5 +9,5 @@ public/data/*.json
 public/img/sprites*.webp
 
 privacy.html
-sources.yml
+# sources.yml
 .env

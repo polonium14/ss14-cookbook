@@ -104,7 +104,7 @@ export const App = (props: Props): ReactElement => {
           <footer>
             <p>
               {'Przepisy wygenerowane z commita '}
-              <a href={commitLink} target='_blank' rel='noopener'>
+              <a href={commitLink} target='_blank' rel="noopener noreferrer">
                 {meta.commit.slice(0, 9)}
               </a>
               {` on ${formatDate(meta.date)}.`}
@@ -112,7 +112,7 @@ export const App = (props: Props): ReactElement => {
             <p>
               Stworzone przez Alice Heurlin / Arimah, 2024.
               {' '}
-              GitHub: <a href='https://github.com/arimah' target='_blank' rel='noopener'>arimah</a>.
+              GitHub: <a href='https://github.com/arimah' target='_blank' rel="noopener noreferrer">arimah</a>.
             </p>
             <p>
               {'Sprite\'y zostały stworzone przez wielu kontrybutorów: '}
@@ -122,7 +122,7 @@ export const App = (props: Props): ReactElement => {
             <p>
               <PrivacyPolicyLink/>
               {' • '}
-              <a href={REPO_URL} target='_blank' rel='noopener'>Source code</a>
+              <a href={REPO_URL} target='_blank' rel="noopener noreferrer">Source code</a>
             </p>
           </footer>
           <CanonicalRedirect/>

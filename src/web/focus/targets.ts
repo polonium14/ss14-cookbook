@@ -76,7 +76,7 @@ const isHidden = (element: Element): boolean => {
 };
 
 const isCandidateFocusable = (element: Element): boolean =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+   
   !(element as any).disabled &&
   !isHiddenInput(element) &&
   !isHidden(element);

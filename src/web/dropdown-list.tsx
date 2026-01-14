@@ -75,13 +75,14 @@ export const DropdownList = memo((props: Props): ReactElement => {
         onClose();
         break;
       case 'Space':
-      case 'Enter':
+      case 'Enter': {
         e.preventDefault();
         const item = items[index];
         if (!item.separator) {
           item.activate(onClose);
         }
         break;
+      }
     }
   }, [index, items, onClose]);
 

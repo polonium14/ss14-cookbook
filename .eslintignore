@@ -1,0 +1,8 @@
+node_modules/
+bin/
+public/
+
+# glównie pliki konfiguracyjne
+*.js
+*.mjs
+!eslint.config.js

@@ -107,7 +107,7 @@ const parseContent = (source: string): ReactNode[] => {
         break;
       case 'link':
         prevContent.push(
-          <a key={key} href={attr} target='_blank' rel='noopener'>
+          <a key={key} href={attr} target='_blank' rel="noopener noreferrer">
             {content}
           </a>
         );

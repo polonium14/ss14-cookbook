@@ -156,7 +156,7 @@ export const RecipeList = memo((): ReactElement => {
   const hasFilter = isFilterActive(filter);
 
   return (
-    <main hidden={!open}>
+    <main>
       <div className='recipe-search'>
         <InputGroup iconBefore={<SearchIcon/>}>
           <input

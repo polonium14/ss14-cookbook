@@ -120,7 +120,7 @@ const AttributionItem = (props: AttributionItemProps) => {
       <p>
         <b>Path:</b>
         {' '}
-        <a href={pathUrl} target='_blank' rel='noopener'>{attr.path}</a>
+        <a href={pathUrl} target='_blank' rel="noopener noreferrer">{attr.path}</a>
       </p>
       <p><b>License:</b> <LicenseText license={attr.license}/></p>
       <p><b>Copyright:</b> <CopyrightText copyright={attr.copyright}/></p>
@@ -152,7 +152,7 @@ const LicenseText = (props: LicenceTextProps): ReactElement => {
 
   return (
     url ? (
-      <a href={url} target='_blank' rel='noopener'>
+      <a href={url} target='_blank' rel="noopener noreferrer">
         {license}
       </a>
     ) : <>{license}</>
@@ -193,7 +193,7 @@ const CopyrightText = memo((props: CopyrightTextProps): ReactNode => {
     }
 
     parts.push(
-      <a key={m.index} href={url} target='_blank' rel='noopener'>
+      <a key={m.index} href={url} target='_blank' rel="noopener noreferrer">
         {url}
       </a>
     );

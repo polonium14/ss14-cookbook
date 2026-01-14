@@ -12,7 +12,7 @@ export default [
       'node_modules/**',
       '**/*.js',
       '**/*.mjs',
-      '!eslint.config.mjs',
+      '!eslint.config.js',
       '!rollup.config.mjs'
     ]
   },
@@ -39,6 +39,15 @@ export default [
         __filename: 'readonly',
         module: 'readonly',
         require: 'readonly',
+        document: 'readonly',
+        window: 'readonly',
+        localStorage: 'readonly',
+        fetch: 'readonly',
+        clearTimeout: 'readonly',
+        setTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        getComputedStyle: 'readonly',
         IS_DEV: 'readonly',
         BASE_PATH: 'readonly',
         REPO_URL: 'readonly',
@@ -46,6 +55,11 @@ export default [
         CANONICAL_URL: 'readonly',
         PRIVACY_POLICY_HTML: 'readonly'
       }
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+      'react': reactPlugin,
+      'react-hooks': reactHooksPlugin
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
@@ -59,12 +73,15 @@ export default [
       '@typescript-eslint/no-require-imports': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
-      'react/jsx-uses-react': 'off'
-    },
-    plugins: {
-      '@typescript-eslint': tsPlugin,
-      'react': reactPlugin,
-      'react-hooks': reactHooksPlugin
+      'no-redeclare': 'off',
+      'no-import-assign': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/display-name': 'off',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/refs': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/use-memo': 'off',
     },
     settings: {
       react: {

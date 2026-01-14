@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "env-cmd rollup -c",
-    "gen:recipes": "node ./bin/recipe-gen.js sources.yml",
+    "gen:recipes": "node ./bin/recipe-gen.cjs sources.yml",
     "diff:recipes": "node ./bin/recipe-diff.js",
     "watch": "env-cmd -f .env.development -- rollup -c --watch",
     "start": "http-server --port 5514 --proxy http://localhost:5514/index.html?",

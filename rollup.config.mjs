@@ -191,7 +191,7 @@ export default [
       format: 'cjs',
       exports: 'none',
       sourcemap: false,
-      file: './bin/recipe-gen.js',
+      file: './bin/recipe-gen.cjs',
     },
     plugins,
     external: external(),

@@ -46,7 +46,7 @@ interface ForkInfo {
 }
 
 const PrototypesSubPath = './Resources/Prototypes';
-const LocaleSubPath = './Resources/Locale/en-US';
+const LocaleSubPath = './Resources/Locale/pl-PL';
 const TexturesSubPath = './Resources/Textures';
 
 const buildFork = async (id: string, fork: ForkInfo): Promise<ProcessedGameData> => {

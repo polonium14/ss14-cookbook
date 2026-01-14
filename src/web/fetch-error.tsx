@@ -9,11 +9,7 @@ export const FetchError = (props: FetchErrorProps): ReactElement => {
   return <>
     <p>{message} :(</p>
     <p>
-      It may help to reload the page.
-      {' '}
-      If the problem persists, contact me on Discord (@arimah) or Telegram (
-        <a href='https://t.me/arimah42' target='_blank' rel='noopener'>@arimah42</a>
-      ).
+      Może pomóc odświeżenie strony.
     </p>
   </>;
 }

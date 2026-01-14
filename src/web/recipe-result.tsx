@@ -48,11 +48,11 @@ export const RecipeResult = memo((props: RecipeResultProps): ReactElement => {
         </span>
         <Tooltip
           text={
-            `The recipe makes ${
+            `Ten przepis daje ${
               resultQty
             }u ${
               resultName
-            } with the amounts shown. You can make larger or smaller batches as long as the ratio stays the same.`
+            } z podanymi ilościami. Możesz zrobić większe lub mniejsze partie, o ile proporcje pozostaną takie same.`
           }
         >
           <span className='recipe_result-qty'>

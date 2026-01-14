@@ -20,17 +20,17 @@ const HeaderTabs: readonly HeaderTab[] = [
   {
     id: 'recipe-list',
     target: url => url.recipes,
-    label: 'All Recipes',
+    label: 'Wszystkie przepisy',
   },
   {
     id: 'food-sequence',
     target: url => url.foodSequence,
-    label: 'Combinations',
+    label: 'Kombinacje',
   },
   {
     id: 'menu-planner',
     target: url => url.menuList,
-    label: 'Menu Planner',
+    label: 'Planer menu',
   },
 ];
 

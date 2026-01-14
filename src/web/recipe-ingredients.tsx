@@ -116,9 +116,9 @@ export const ReagentIngredient = (
           {' '}
           <Tooltip
             text={
-              `You won’t lose any of the ${
+              `Nie tracisz ${
                 reagent.name
-              } when making this recipe.`
+              } podczas tworzenia tego przepisu.`
             }
           >
             <span className='recipe_catalyst'>

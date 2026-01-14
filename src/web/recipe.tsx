@@ -116,8 +116,8 @@ export const Recipe = memo((props: Props): ReactElement => {
 });
 
 const FoodSequenceStartTooltip =
-  'You can put other foods inside this one.\n' +
-  'Click to see what can be put inside it.';
+  'Możesz umieścić inne jedzenie w tym.\n' +
+  'Kliknij, aby zobaczyć, co można do niego włożyć.';
 
 const defaultHeaderAction = (
   recipe: RecipeData,
@@ -218,8 +218,8 @@ const ExploreButton = memo((props: ExploreButtonProps): ReactElement => {
     <Tooltip
       text={
         isCurrent
-          ? 'Close recipe explorer'
-          : 'Explore related recipes'
+          ? 'Zamknij eksplorator przepisów'
+          : 'Eksploruj powiązane przepisy'
       }
       provideLabel
     >

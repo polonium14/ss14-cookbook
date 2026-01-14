@@ -33,8 +33,8 @@ export type Props = {
 type State = 'up' | 'held' | 'ready';
 
 const DefaultTimeout = 750; // ms
-const DefaultUsageHint = 'Press and hold to confirm';
-const ReleaseHint = 'Release to confirm';
+const DefaultUsageHint = 'Kliknij i przytrzymaj, aby potwierdzić';
+const ReleaseHint = 'Zwolnij, aby potwierdzić';
 
 export const ConfirmButton = (props: Props): ReactElement => {
   const {

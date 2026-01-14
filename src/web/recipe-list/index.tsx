@@ -50,8 +50,8 @@ export {searchByName};
 type SortOrder = 'default' | 'alpha';
 
 const SortOptions: DropdownOption[] = [
-  {value: 'default', name: 'Default order'},
-  {value: 'alpha', name: 'Alphabetic'},
+  {value: 'default', name: 'Domyślne'},
+  {value: 'alpha', name: 'Alfabetyczne'},
 ];
 
 export const RecipeList = memo((): ReactElement => {
@@ -133,12 +133,12 @@ export const RecipeList = memo((): ReactElement => {
 
   const extraSortItems = useMemo<DropdownExtraItem[]>(() => [
     {
-      name: 'Group by method',
+      name: 'Grupuj według metody',
       checked: groupByMethod,
       activate: () => setGroupByMethod(!groupByMethod),
     },
     {
-      name: 'Favourites first',
+      name: 'Ulubione na górze',
       checked: favsFirst,
       activate: () => setFavsFirst(!favsFirst),
     },
@@ -161,8 +161,8 @@ export const RecipeList = memo((): ReactElement => {
         <InputGroup iconBefore={<SearchIcon/>}>
           <input
             type='search'
-            aria-label='Search recipes by name'
-            placeholder='Search recipes by name...'
+            aria-label='Szukaj przepisów po nazwie'
+            placeholder='Szukaj przepisów po nazwie...'
             size={1}
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -175,7 +175,7 @@ export const RecipeList = memo((): ReactElement => {
           text={
             hasFilter
               ? describeFilter(filter)
-              : 'Filter by ingredient or method'
+              : 'Filtruj według składnika lub metody'
           }
         >
           <button
@@ -193,7 +193,7 @@ export const RecipeList = memo((): ReactElement => {
           </button>
         </Tooltip>
 
-        <Tooltip placement='below' text='Clear filter'>
+        <Tooltip placement='below' text='Wyczyść filtr'>
           <button disabled={!hasFilter} onClick={handleResetFilter}>
             <ClearFilterIcon/>
           </button>
@@ -255,7 +255,7 @@ const ResultCount = (props: ResultCountProps): ReactElement => {
   if (!isFiltered) {
     return (
       <p className='recipe-count'>
-        Showing all {totalCount} recipes.
+        Wyświetlono wszystkie {totalCount} przepisy.
       </p>
     );
   }
@@ -268,7 +268,7 @@ const ResultCount = (props: ResultCountProps): ReactElement => {
     );
   }
 
-  let message = 'Couldn’t find any ';
+  let message = 'Nie znaleziono żadnych ';
 
   if (filter.specials !== 0) {
     message += joinListNatural(
@@ -276,7 +276,7 @@ const ResultCount = (props: ResultCountProps): ReactElement => {
         .filter(t => (t.mask & filter.specials) !== 0)
         .map(t => t.filterSummary),
       ', ',
-      ' and '
+      ' i '
     ) + ' ';
   }
 
@@ -286,26 +286,26 @@ const ResultCount = (props: ResultCountProps): ReactElement => {
         describeMethod(m, filter.subtypes, microwaveRecipeTypes)
       ),
       ', ',
-      ' or '
+      ' lub '
     );
   } else {
-    message += 'recipes';
+    message += 'przepisów';
   }
 
   if (/\S/.test(search)) {
-    message += ` with ‘${search.trim()}’ in the name`;
+    message += ` z ‘${search.trim()}’ w nazwie`;
   }
 
   if (filter.ingredients.size > 0 || filter.reagents.size > 0) {
     switch (filter.ingredientMode) {
       case 'all':
-        message += ' that contain all the selected ingredients';
+        message += ', które zawierają wszystkie wybrane składniki';
         break;
       case 'any':
-        message += ' that contain any of the selected ingredients';
+        message += ', które zawierają dowolny z wybranych składników';
         break;
       case 'only':
-        message += ' made from only the selected ingredients';
+        message += ', które zawierają tylko wybrane składniki';
         break;
     }
   }

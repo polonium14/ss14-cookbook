@@ -75,22 +75,22 @@ export const SettingsDialog = (props: SettingsDialogProps): ReactElement => {
 
 const ThemeOptions: readonly Option<ThemeSetting>[] = [
   {
-    name: 'Dark theme',
+    name: 'Ciemny motyw',
     value: 'dark',
   },
   {
-    name: 'Light theme',
+    name: 'Jasny motyw',
     value: 'light',
   },
 ];
 
 const TemperatureUnitOptions: readonly Option<TemperatureUnitSetting>[] = [
   {
-    name: 'Kelvin (K)',
+    name: 'Kelwin (K)',
     value: 'kelvin',
   },
   {
-    name: 'Celsius (°C)',
+    name: 'Celsjusz (°C)',
     value: 'celsius',
   },
   {

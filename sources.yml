@@ -3,7 +3,6 @@ base:
   description: "Polski fork"
   path: "../repo"
   repo: "polonium14/polonium-station"
-  locale: "pl-PL"
   default: true
   methodEntities: &baseMethods
     microwave: KitchenMicrowave
@@ -21,20 +20,20 @@ base:
     - &reptilianDiet
       organ: OrganReptilianStomach
       color: "#2e6b2e"
-      hint: "Reptilians can eat this food."
+      hint: "Gady mogą jeść to jedzenie."
       filterName: "Reptilian-edible"
       filterSummary: "reptilian-edible"
     - &mothDiet
       organ: OrganMothStomach
       color: "#e3c7aa"
-      hint: "Moths can eat this food."
+      hint: "Ćmy mogą jeść to jedzenie."
       filterName: "Moth-edible"
       filterSummary: "moth-edible"
   specialReagents:
     - &theobromine
       id: Theobromine
       color: "#b9643b"
-      hint: "This food contains theobromine, poisonous to some species."
+      hint: "To jedzenie zawiera teobrominę, która jest trująca dla niektórych gatunków."
       filterName: "Contains Theobromine"
       filterSummary: "theobromine-containing"
   sortingIdRewrites: &baseRewrites

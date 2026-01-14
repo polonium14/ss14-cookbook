@@ -80,7 +80,7 @@ const StartStep = (props: StartStepProps): ReactElement => {
   const {step} = props;
   return (
     <li className='recipe_step recipe_step--compact'>
-      Take <SolidIngredient id={step.entity}/>
+      Weź <SolidIngredient id={step.entity}/>
     </li>
   );
 };
@@ -100,7 +100,7 @@ const EndStep = (props: EndStepProps): ReactElement => {
   } else {
     return (
       <li className='recipe_step recipe_step--add'>
-        <span>Finish with one of:</span>
+        <span>Zakończ z jednym z:</span>
         {step.entity.map(id => <SolidIngredient key={id} id={id}/>)}
       </li>
     );
@@ -155,14 +155,14 @@ const AddStep = (props: AddStepProps): ReactElement => {
   let text: string;
   if (step.minCount) {
     if (step.maxCount) {
-      text = `Add ${step.minCount} to ${step.maxCount} `;
+      text = `Dodaj ${step.minCount} do ${step.maxCount} `;
     } else {
-      text = `Add ${step.minCount} or more`;
+      text = `Dodaj co najmniej ${step.minCount}`;
     }
   } else if (step.maxCount) {
-    text = `Add up to ${step.maxCount} `;
+    text = `Dodaj do ${step.maxCount} `;
   } else {
-    text = `Add `;
+    text = `Dodaj `;
   }
 
   // More compact appearance if only one entity matches
@@ -174,9 +174,9 @@ const AddStep = (props: AddStepProps): ReactElement => {
     );
   } else {
     if (step.minCount || step.maxCount) {
-      text += ' of any of:';
+      text += ' z dowolnego z:';
     } else {
-      text += ' any of:';
+      text += ' dowolnego z:';
     }
     return (
       <li className='recipe_step recipe_step--add'>
@@ -262,10 +262,10 @@ const SimpleStep = (props: SimpleStepProps): ReactElement => {
 };
 
 const SimpleStepText: Readonly<Record<SimpleInteractionStep['type'], string>> = {
-  cut: 'Cut it',
-  roll: 'Roll it',
-  shake: 'Shake it',
-  stir: 'Stir it',
+  cut: 'Pokrój to',
+  roll: 'Zwiń to',
+  shake: 'Potrząśnij tym',
+  stir: 'Wymieszaj to',
 };
 
 interface AlsoMakesStepProps {

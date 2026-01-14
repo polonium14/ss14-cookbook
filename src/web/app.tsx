@@ -103,21 +103,19 @@ export const App = (props: Props): ReactElement => {
           </ForkProvider>
           <footer>
             <p>
-              {'Recipes generated from commit '}
+              {'Przepisy wygenerowane z commita '}
               <a href={commitLink} target='_blank' rel='noopener'>
                 {meta.commit.slice(0, 9)}
               </a>
               {` on ${formatDate(meta.date)}.`}
             </p>
             <p>
-              Made by Alice Heurlin / Arimah, 2024.
-              {' '}
-              Discord: @arimah.
+              Stworzone przez Alice Heurlin / Arimah, 2024.
               {' '}
               GitHub: <a href='https://github.com/arimah' target='_blank' rel='noopener'>arimah</a>.
             </p>
             <p>
-              {'Sprites were made by many contributors: '}
+              {'Sprite\'y zostały stworzone przez wielu kontrybutorów: '}
               <AttributionsLink value={data.attributions} meta={meta}/>
               {'.'}
             </p>

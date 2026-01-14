@@ -81,9 +81,9 @@ export const FavoriteButton = memo((
   const isFav = isFavorite(id);
 
   return (
-    <Tooltip text={isFav ? 'Remove from favourites' : 'Mark as favourite'}>
+    <Tooltip text={isFav ? 'Usuń z ulubionych' : 'Oznacz jako ulubione'}>
       <button
-        aria-label='Mark as favourite'
+        aria-label='Oznacz jako ulubione'
         aria-pressed={isFav}
         className='fav'
         onClick={() => toggleFavorite(id)}

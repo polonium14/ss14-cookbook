@@ -41,6 +41,8 @@ export default [
         require: 'readonly',
         document: 'readonly',
         window: 'readonly',
+        navigator: 'readonly',
+        location: 'readonly',
         localStorage: 'readonly',
         fetch: 'readonly',
         clearTimeout: 'readonly',

@@ -1,22 +1,21 @@
-import {ReactElement, memo, useMemo} from 'react';
-
-import {Entity} from '../../types';
-
-import {EntitySprite} from '../sprites';
-import {useGameData} from '../context';
-import {RecipePopup} from '../recipe-popup';
-import {NeutralCollator} from '../helpers';
+import { ReactElement, memo, useMemo } from 'react';
+import { Entity } from '../../types';
+import { useGameData } from '../context';
+import { NeutralCollator } from '../helpers';
+import { RecipePopup } from '../recipe-popup';
+import { EntitySprite } from '../sprites';
 
 export interface SeqStartPointProps {
   entity: Entity;
 }
 
-export const SeqStartPoint = memo((props: SeqStartPointProps): ReactElement => {
-  const {entity} = props;
-
+export const SeqStartPoint = memo(({
+  entity,
+}: SeqStartPointProps): ReactElement => {
   const {
     recipesBySolidResult,
     foodSequenceElements,
+    foodSequenceEndPoints,
     entityMap,
   } = useGameData();
 
@@ -32,6 +31,15 @@ export const SeqStartPoint = memo((props: SeqStartPointProps): ReactElement => {
         return NeutralCollator.compare(entA.name, entB.name);
       });
   }, [seqStart, foodSequenceElements, entityMap]);
+  const endPoints = useMemo(() => {
+    return foodSequenceEndPoints.get(seqStart.key)
+      ?.slice(0)
+      .sort((a, b) => {
+        const entA = entityMap.get(a)!;
+        const entB = entityMap.get(b)!;
+        return NeutralCollator.compare(entA.name, entB.name);
+      });
+  }, [seqStart, foodSequenceEndPoints, entityMap]);
 
   return <>
     <p className='foodseq_start'>
@@ -48,6 +56,13 @@ export const SeqStartPoint = memo((props: SeqStartPointProps): ReactElement => {
     <ul className='foodseq_elements'>
       {elements.map(id => <SeqElement key={id} id={id}/>)}
     </ul>
+
+    {endPoints && endPoints.length > 0 && <>
+      <p>and can be finished with one of:</p>
+      <ul className='foodseq_elements'>
+        {endPoints.map(id => <SeqElement key={id} id={id}/>)}
+      </ul>
+    </>}
   </>;
 });
 
@@ -55,10 +70,8 @@ interface SeqElementProps {
   id: string;
 }
 
-const SeqElement = (props: SeqElementProps): ReactElement => {
-  const {id} = props;
-
-  const {recipesBySolidResult, entityMap} = useGameData();
+const SeqElement = ({ id }: SeqElementProps): ReactElement => {
+  const { recipesBySolidResult, entityMap } = useGameData();
 
   const entity = entityMap.get(id)!;
   const recipe = recipesBySolidResult.get(entity.id);

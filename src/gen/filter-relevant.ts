@@ -1,10 +1,7 @@
-import {OneOrMoreEntities} from '../types';
-
-import {DefaultRecipeGroup, MixerCategoryToStepType} from './constants';
-import {RawGameData} from './read-raw';
-import {getReagentResult, getSolidResult} from './reaction-helpers';
-import {EntitySpawnEntry, Solution} from './components';
-import {ConstructRecipeBuilder} from './construct-recipe-builder';
+import { OneOrMoreEntities } from '../types';
+import { EntitySpawnEntry, Solution } from './components';
+import { DefaultRecipeGroup, MixerCategoryToStepType } from './constants';
+import { ConstructRecipeBuilder } from './construct-recipe-builder';
 import {
   ConstructionGraphMap,
   EntityId,
@@ -23,12 +20,14 @@ import {
   StackMap,
   TagId,
 } from './prototypes';
+import { getReagentResult, getSolidResult } from './reaction-helpers';
+import { RawGameData } from './read-raw';
 import {
-  ResolvedSpecialRecipe,
-  ResolvedEntity,
   ResolvedConstruction,
   ResolvedConstructionRecipe,
+  ResolvedEntity,
   ResolvedEntityMap,
+  ResolvedSpecialRecipe,
 } from './types';
 
 export interface PrunedGameData {
@@ -40,6 +39,7 @@ export interface PrunedGameData {
   readonly reagentSources: ReadonlyMap<ReagentId, readonly EntityId[]>;
   readonly foodSequenceStartPoints: ReadonlyMap<TagId, readonly EntityId[]>;
   readonly foodSequenceElements: ReadonlyMap<TagId, readonly EntityId[]>;
+  readonly foodSequenceEndPoints: ReadonlyMap<TagId, readonly EntityId[]>;
 }
 
 export interface FilterParams {
@@ -166,6 +166,7 @@ export const filterRelevantPrototypes = (
     reagentSources,
     foodSequenceStartPoints: foodSequences.startPoints,
     foodSequenceElements: foodSequences.elements,
+    foodSequenceEndPoints: foodSequences.endPoints,
   };
 };
 
@@ -257,6 +258,7 @@ const addMetamorphRecipes = (
         case 'IngredientsWithTags': {
           const ingredients = findMetamorphIngredients(
             allEntities,
+            recipe.key,
             foodSequenceElements,
             rule.tags,
             rule.needAll
@@ -276,6 +278,7 @@ const addMetamorphRecipes = (
         case 'LastElementHasTags': {
           const ingredients = findMetamorphIngredients(
             allEntities,
+            recipe.key,
             foodSequenceElements,
             rule.tags,
             rule.needAll
@@ -320,6 +323,7 @@ const addMetamorphRecipes = (
 
 const findMetamorphIngredients = (
   allEntities: ResolvedEntityMap,
+  targetSequence: TagId,
   foodSequenceElements: FoodSequenceElementMap,
   tags: readonly TagId[],
   needAll = true
@@ -362,15 +366,9 @@ const findMetamorphIngredients = (
   }
 
   // Second, let's find all entities that use any of the matching food
-  // sequence elements.
-  const isRelevantElem = (elem: FoodSequenceElementId): boolean =>
-    elements.has(elem);
-
+  // sequence elements in the target sequence.
   const entities = allEntities.values()
-    .filter(ent =>
-      ent.foodSequenceElement !== null &&
-      ent.foodSequenceElement.elements.some(isRelevantElem)
-    )
+    .filter(ent => entityCanBeFoodSequenceElem(ent, elements, targetSequence))
     .map(ent => ent.id)
     .toArray();
   switch (entities.length) {
@@ -381,6 +379,21 @@ const findMetamorphIngredients = (
     default:
       return entities;
   }
+};
+
+const entityCanBeFoodSequenceElem = (
+  ent: ResolvedEntity,
+  soughtIds: ReadonlySet<FoodSequenceElementId>,
+  targetSequence: TagId
+): boolean => {
+  if (!ent.foodSequenceElement) {
+    return false;
+  }
+  const elem = ent.foodSequenceElement.get(targetSequence);
+  if (!elem) {
+    return false;
+  }
+  return soughtIds.has(elem.element);
 };
 
 const tryAddSpecialRecipes = (
@@ -396,7 +409,7 @@ const tryAddSpecialRecipes = (
   // FoodDough can be cut into FoodDoughSlice *or* rolled into FoodDoughFlat.
   let addedAnything = false;
 
-  const {sliceableFood, construction, deepFryOutput} = entity;
+  const { sliceableFood, construction, deepFryOutput } = entity;
 
   // If this entity can be sliced to something that's used as an ingredient
   // (e.g. cheese wheel to cheese slice), then add a special recipe for it
@@ -493,7 +506,7 @@ const tryAddSpecialRecipes = (
     allEntities,
     allConstructionGraphs
   )) {
-    const {mainVerb} = recipe;
+    const { mainVerb } = recipe;
     const recipeId = mainVerb
       ? `${mainVerb}!${entity.id}`
       : `construct!${entity.id}:${recipe.solidResult}`;
@@ -690,7 +703,7 @@ function* traverseConstructionGraph(
       continue;
     }
 
-    const {steps} = edge;
+    const { steps } = edge;
     if (
       steps.length !== 1 || // No support for multi-step construction
       target.entity == null ||
@@ -786,7 +799,7 @@ const findGrindableProduceReagents = (
   entity: ResolvedEntity,
   usedReagents: Set<ReagentId>
 ): ReagentId[] | null => {
-  const {isProduce, extractable, solution} = entity;
+  const { isProduce, extractable, solution } = entity;
 
   if (
     !extractable ||
@@ -823,6 +836,7 @@ const findGrindableProduceReagents = (
 interface FoodSequences {
   startPoints: Map<TagId, EntityId[]>;
   elements: Map<TagId, EntityId[]>;
+  endPoints: Map<TagId, EntityId[]>;
 }
 
 const collectFoodSequences = (
@@ -832,17 +846,18 @@ const collectFoodSequences = (
 ): FoodSequences => {
   const startPoints = new Map<TagId, EntityId[]>();
   for (const id of usedEntities.values()) {
-    const {foodSequenceStart} = allEntities.get(id)!;
+    const { foodSequenceStart } = allEntities.get(id)!;
     if (foodSequenceStart?.key) {
       appendAtKey(startPoints, foodSequenceStart.key, id);
     }
   }
 
   const elements = new Map<TagId, EntityId[]>();
+  const endPoints = new Map<TagId, EntityId[]>();
   for (const entity of allEntities.values()) {
     if (
       !entity.foodSequenceElement ||
-      entity.foodSequenceElement.keys.length === 0 ||
+      entity.foodSequenceElement.size === 0 ||
       ignoredFoodSequenceElements.has(entity.id)
     ) {
       continue;
@@ -850,14 +865,14 @@ const collectFoodSequences = (
 
     usedEntities.add(entity.id);
 
-    for (const key of entity.foodSequenceElement.keys) {
+    for (const [key, elem] of entity.foodSequenceElement) {
       if (!startPoints.has(key)) {
         continue;
       }
-      appendAtKey(elements, key, entity.id);
+      appendAtKey(elem.final ? endPoints : elements, key, entity.id);
     }
   }
-  return {startPoints, elements};
+  return { startPoints, elements, endPoints };
 };
 
 const appendAtKey = <K, V>(map: Map<K, V[]>, key: K, value: V): void => {

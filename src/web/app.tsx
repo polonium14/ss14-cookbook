@@ -1,20 +1,18 @@
-import {ReactElement, useCallback, useEffect, useMemo, useState} from 'react';
-import {Outlet, useSearchParams} from 'react-router';
-
-import {ForkData, GameData} from '../types';
-
-import {FetchError} from './fetch-error';
-import {GameDataProvider} from './context';
-import {FavoritesProvider} from './favorites';
-import {RecipeExplorerProvider} from './recipe-explorer';
-import {AttributionsLink} from './attributions';
-import {CanonicalRedirect} from './canonical-redirect';
-import {PrivacyPolicyLink} from './privacy';
-import {GitHubCommitUrl} from './helpers';
-import {NoticesProvider} from './notices';
-import {ForkProvider} from './fork-context';
-import {UrlProvider} from './url';
-import {NoticeData} from './types';
+import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import { Outlet, useSearchParams } from 'react-router';
+import { ForkData, GameData } from '../types';
+import { AttributionsLink } from './attributions';
+import { CanonicalRedirect } from './canonical-redirect';
+import { GameDataProvider } from './context';
+import { FavoritesProvider } from './favorites';
+import { FetchError } from './fetch-error';
+import { ForkProvider } from './fork-context';
+import { GitHubCommitUrl } from './helpers';
+import { NoticesProvider } from './notices';
+import { PrivacyPolicyLink } from './privacy';
+import { RecipeExplorerProvider } from './recipe-explorer';
+import { NoticeData } from './types';
+import { UrlProvider } from './url';
 
 export interface Props {
   forks: readonly ForkData[];
@@ -25,9 +23,10 @@ const NoticesPath = `${BASE_PATH}/data/notices.json`;
 const ForkDataPath = (id: string, hash: string) =>
   `${BASE_PATH}/data/data_${id}.${hash}.json`;
 
-export const App = (props: Props): ReactElement => {
-  const {forks} = props;
+const SpriteSheetPath = (fileName: string) =>
+  `${BASE_PATH}/data/${fileName}`;
 
+export const App = ({ forks }: Props): ReactElement => {
   const [query, setQuery] = useSearchParams();
 
   const queryFork = query.get('fork');
@@ -64,11 +63,11 @@ export const App = (props: Props): ReactElement => {
         setData(data);
         document.body.style.setProperty(
           '--sprite-url',
-          `url('${BASE_PATH}/img/${data.spriteSheet}')`
+          `url('${SpriteSheetPath(data.spriteSheet)}')`
         );
       });
 
-    fetch(NoticesPath, {cache: 'reload'})
+    fetch(NoticesPath, { cache: 'reload' })
       .then(res => res.json())
       .catch(err => {
         console.error('Error fetching notices:', err);

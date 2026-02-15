@@ -1,6 +1,4 @@
-import {customAlphabet} from 'nanoid';
-
-export const CookingMenuVersion = 1;
+import { customAlphabet } from 'nanoid';
 
 export interface CookingMenu {
   /** This menu's unique, randomly generated ID.*/

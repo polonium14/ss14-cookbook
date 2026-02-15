@@ -1,5 +1,5 @@
-import {SimpleInteractionStep, SpritePoint} from '../types';
-import {ParsedColor} from './types';
+import { SimpleInteractionStep } from '../types';
+import { ParsedColor } from './types';
 
 /**
  * MUST MIRROR C#! This matches the default value of the field
@@ -49,7 +49,7 @@ export const GameDataPath = (id: string, hash: string) =>
 export const ForkListPath = 'public/data/index.json';
 
 export const SpriteSheetPath = (id: string, hash: string) =>
-  `public/img/${SpriteSheetFileName(id, hash)}`;
+  `public/data/${SpriteSheetFileName(id, hash)}`;
 
 export const SpriteSheetFileName = (id: string, hash: string) =>
   `sprites_${id}.${hash}.webp`;

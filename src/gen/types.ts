@@ -4,8 +4,7 @@ import {
   ReagentIngredient,
   Recipe,
 } from '../types';
-
-import {EntitySpawnEntry, Solution} from './components';
+import { EntitySpawnEntry, Solution } from './components';
 import {
   ConstructionGraphId,
   EntityId,
@@ -97,7 +96,7 @@ export interface ResolvedEntity {
    * If the entity is a food sequence element, contains the food sequences it
    * can participate in as well as its corresponding elements.
    */
-  readonly foodSequenceElement: ResolvedFoodSequenceElement | null;
+  readonly foodSequenceElement: ReadonlyMap<TagId, ResolvedFoodSequenceElement> | null;
   /**
    * If the entity is a sliceable food, contains the resulting slice entity
    * and count.
@@ -186,8 +185,8 @@ export interface ResolvedFoodSequenceStart {
 }
 
 export interface ResolvedFoodSequenceElement {
-  readonly keys: readonly TagId[];
-  readonly elements: readonly FoodSequenceElementId[];
+  readonly element: FoodSequenceElementId;
+  readonly final: boolean;
 }
 
 export type ResolvedReagentMap = ReadonlyMap<ReagentId, ResolvedReagent>;

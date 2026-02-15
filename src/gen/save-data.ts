@@ -1,29 +1,27 @@
-import {existsSync, writeFileSync} from 'fs';
-import {dirname, resolve} from 'path';
-import {createHash} from 'crypto';
-
-import {JimpInstance} from 'jimp';
-
+import { JimpInstance } from 'jimp';
+import { createHash } from 'node:crypto';
+import { existsSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import sharp from 'sharp';
 import {
-  GameData,
   Entity,
+  ForkData,
+  GameData,
   Reagent,
   Recipe,
-  ForkData,
 } from '../types';
-
-import {SpriteSheetData} from './build-spritesheet';
-import {ResolvedGameData} from './resolve-prototypes';
-import {ResolvedSpecials} from './resolve-specials';
-import {EntityId, TagId} from './prototypes';
-import {mapToObject} from './helpers';
+import { SpriteSheetData } from './build-spritesheet';
 import {
-  GameDataPath,
-  SpriteSheetPath,
-  SpriteSheetFileName,
   ForkListPath,
+  GameDataPath,
+  SpriteSheetFileName,
+  SpriteSheetPath,
 } from './constants';
-import {MicrowaveRecipeTypes, ResolvedEntity} from './types';
+import { mapToObject } from './helpers';
+import { EntityId, TagId } from './prototypes';
+import { ResolvedGameData } from './resolve-prototypes';
+import { ResolvedSpecials } from './resolve-specials';
+import { MicrowaveRecipeTypes, ResolvedEntity } from './types';
 
 export interface ProcessedGameData {
   readonly id: string;
@@ -34,6 +32,7 @@ export interface ProcessedGameData {
   readonly resolved: ResolvedGameData;
   readonly foodSequenceStartPoints: ReadonlyMap<TagId, readonly EntityId[]>;
   readonly foodSequenceElements: ReadonlyMap<TagId, readonly EntityId[]>;
+  readonly foodSequenceEndPoints: ReadonlyMap<TagId, readonly EntityId[]>;
   readonly specials: ResolvedSpecials,
   readonly sprites: SpriteSheetData;
   readonly microwaveRecipeTypes?: MicrowaveRecipeTypes;
@@ -59,27 +58,13 @@ export const saveData = async (
   for (const d of dataWithSpriteHash) {
     const entities: Entity[] = [];
 
-    const hasFoodSequence = (k: TagId): boolean =>
-      d.foodSequenceStartPoints.has(k);
-
     for (const [id, entity] of d.resolved.entities) {
-      const foodSeqElem = entity
-        .foodSequenceElement
-        ?.keys
-        .filter(hasFoodSequence);
-
       entities.push({
         id,
         name: entity.name,
         sprite: d.sprites.points.get(id)!,
         traits: getSpecialsMask(entity, d.specials),
-        seqStart: entity.foodSequenceStart?.key ? {
-          key: entity.foodSequenceStart.key,
-          maxCount: entity.foodSequenceStart.maxLayers,
-        } : undefined,
-        seqElem: foodSeqElem && foodSeqElem.length > 0
-          ? foodSeqElem
-          : undefined,
+        ...getFoodSequenceData(entity, d.foodSequenceStartPoints),
       });
     }
 
@@ -97,7 +82,7 @@ export const saveData = async (
 
     const recipes: Recipe[] = [];
     for (const [id, recipe] of d.resolved.recipes) {
-      recipes.push({id, ...recipe});
+      recipes.push({ id, ...recipe });
 
       for (const solid of Object.keys(recipe.solids)) {
         ingredients.add(solid);
@@ -111,6 +96,7 @@ export const saveData = async (
       recipes,
       foodSequenceStartPoints: mapToObject(d.foodSequenceStartPoints),
       foodSequenceElements: mapToObject(d.foodSequenceElements),
+      foodSequenceEndPoints: mapToObject(d.foodSequenceEndPoints),
 
       methodSprites: mapToObject(d.sprites.methods),
       beakerFill: d.sprites.beakerFillPoint,
@@ -168,18 +154,17 @@ export const saveData = async (
     encoding: 'utf-8',
   });
 
-  const createWebp = (await import('imagemin-webp')).default({
-    alphaQuality: 100,
-    quality: 100,
-    lossless: true,
-    preset: 'drawing',
-    metadata: 'none',
-  });
-
   await Promise.all(dataWithSpriteHash.map(async d => {
     const fullPath = resolve(dir, SpriteSheetPath(d.id, d.spriteHash));
     const png = await d.sprites.sheet.getBuffer('image/png');
-    const webp = await createWebp(png);
+    const webp = await sharp(png)
+      .webp({
+        alphaQuality: 100,
+        quality: 100,
+        lossless: true,
+        preset: 'drawing',
+      })
+      .toBuffer();
     if (!existsSync(fullPath)) {
       console.log(`Create: ${fullPath}`);
     }
@@ -198,6 +183,40 @@ const getSpecialsMask = (
     }
   }
   return mask;
+};
+
+const getFoodSequenceData = (
+  ent: ResolvedEntity,
+  foodSequenceStartPoints: ReadonlyMap<TagId, readonly EntityId[]>
+): Pick<Entity, 'seqStart' | 'seqElem' | 'seqEnd'> | null => {
+  // Can this entity *start* a food sequence?
+  const seqStart = ent.foodSequenceStart?.key ? {
+    key: ent.foodSequenceStart.key,
+    maxCount: ent.foodSequenceStart.maxLayers,
+  } : undefined;
+
+  // Can this entity be *part* of a food sequence (middle or end)?
+  let seqElem: readonly string[] | undefined;
+  let seqEnd: readonly string[] | undefined;
+  if (ent.foodSequenceElement) {
+    const elem = ent.foodSequenceElement;
+    // Each food sequence that the entity can participate in must have
+    // a start point. We use this information to show "X can be put in Y"
+    // in the UI; if Y is empty, it can't *actually* be put in anything.
+    const allElements = Array.from(elem);
+    seqElem = allElements
+      .filter(([k, e]) => foodSequenceStartPoints.has(k) && !e.final)
+      .map(kvp => kvp[0]);
+    seqEnd = allElements
+      .filter(([k, e]) => foodSequenceStartPoints.has(k) && e.final)
+      .map(kvp => kvp[0]);
+  }
+
+  return {
+    seqStart,
+    seqElem: seqElem && seqElem.length > 0 ? seqElem : undefined,
+    seqEnd: seqEnd && seqEnd.length > 0 ? seqEnd : undefined,
+  };
 };
 
 const getSpriteHash = async (sheet: JimpInstance): Promise<string> => {

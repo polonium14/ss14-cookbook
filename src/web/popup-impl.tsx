@@ -1,10 +1,10 @@
 import {
   Dispatch,
-  SetStateAction,
   Ref,
-  useState,
-  useRef,
+  SetStateAction,
   useEffect,
+  useRef,
+  useState,
 } from 'react';
 
 export type PopupPlacement =
@@ -27,15 +27,25 @@ export interface PopupTrigger<
   parentRef: Ref<EParent>;
 }
 
+export interface PopupTriggerOptions {
+  open?: boolean;
+  intentTimeout?: number;
+}
+
 export function usePopupTrigger<
   EPopup extends HTMLElement | SVGElement,
   EParent extends HTMLElement | SVGElement = HTMLElement
 >(
   placement: PopupPlacement,
   content?: any,
-  intentTimeout = 300,
+  {
+    open: forceOpen,
+    intentTimeout = 300,
+  }: PopupTriggerOptions = {}
 ): PopupTrigger<EPopup, EParent> {
   const [visible, setVisible] = useState(false);
+
+  const open = forceOpen ?? visible;
 
   const [parent, setParent] = useState<EParent | null>(null);
 
@@ -58,11 +68,11 @@ export function usePopupTrigger<
 
   useEffect(() => {
     const popup = popupRef.current;
-    if (!visible || !popup || !parent) {
+    if (!open || !popup || !parent) {
       return;
     }
 
-    const {x, y} = placePopup(
+    const { x, y } = placePopup(
       placement,
       parent.getBoundingClientRect(),
       popup.getBoundingClientRect()
@@ -70,9 +80,9 @@ export function usePopupTrigger<
 
     popup.style.left = `${Math.round(x)}px`;
     popup.style.top = `${Math.round(y)}px`;
-  }, [visible, placement, parent, content]);
+  }, [open, placement, parent, content]);
 
-  return {visible, popupRef, parentRef: setParent};
+  return { visible: open, popupRef, parentRef: setParent };
 }
 
 type TriggerElement = HTMLElement | SVGElement;
@@ -229,7 +239,7 @@ export function placePopup(
     window.innerHeight - popupRect.height - screenMargin
   );
 
-  return {x, y};
+  return { x, y };
 }
 
 function clamp(value: number, min: number, max: number): number {

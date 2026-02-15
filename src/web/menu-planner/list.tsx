@@ -1,22 +1,96 @@
-import {ReactElement, memo, useMemo} from 'react';
-import {Link} from 'react-router';
+import { ReactElement, ReactNode, memo, useEffect, useMemo } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router';
+import { useGameData } from '../context';
+import { AddIcon, EditIcon } from '../icons';
+import { Notice } from '../notices';
+import { Tooltip } from '../tooltip';
+import { useUrl } from '../url';
+import { ImportMenuDialog } from './import-menu-dialog';
+import { useStoredMenus } from './storage';
+import { importMenu } from './transfer';
+import { CookingMenu } from './types';
 
-import {useGameData} from '../context';
-import {useUrl} from '../url';
-import {AddIcon, EditIcon} from '../icons';
-import {Tooltip} from '../tooltip';
+type ImportState =
+  | ImmediateImportState
+  | ConfirmImportState
+  | ErrorImportState
+  | NoImportState
+  ;
 
-import {useStoredMenus} from './storage';
-import {CookingMenu} from './types';
+interface ImmediateImportState {
+  readonly type: 'immediate';
+  readonly menu: CookingMenu;
+}
+
+interface ConfirmImportState {
+  readonly type: 'confirm';
+  readonly menu: CookingMenu;
+}
+
+interface ErrorImportState {
+  readonly type: 'error';
+}
+
+interface NoImportState {
+  readonly type: 'none';
+}
 
 export const MenuList = memo((): ReactElement => {
+  const navigate = useNavigate();
+  const [query, setQuery] = useSearchParams();
+
   const storage = useStoredMenus();
   const url = useUrl();
 
+  const importParam = query.get('import');
+  const importState = useMemo((): ImportState => {
+    if (!importParam) {
+      return { type: 'none' };
+    }
+
+    const menu = importMenu(importParam);
+    if (!menu) {
+      return { type: 'error' };
+    }
+
+    const existingMenu = storage.get(menu.id);
+    if (existingMenu) {
+      return { type: 'confirm', menu };
+    }
+    return { type: 'immediate', menu };
+  }, [importParam, storage]);
+
+  const handleImport = (menu: CookingMenu) => {
+    storage.save(menu);
+
+    // Remove the `import` parameter from the URL, to stop it from triggering
+    // multiple times when the user navigates back.
+    setQuery(q => {
+      q.delete('import');
+      return q;
+    }, { replace: true });
+
+    navigate(url.menuView(menu.id));
+  };
+
+  const handleCancelImport = () => {
+    setQuery(q => {
+      q.delete('import');
+      return q;
+    }, { replace: true });
+  };
+
+  useEffect(() => {
+    if (importState.type === 'immediate') {
+      handleImport(importState.menu);
+    }
+  }, [importState]);
+
   const allMenus = storage.getAll();
 
+  let menuList: ReactNode;
   if (allMenus.length === 0) {
-    return (
+    menuList =
       <div className='planner_empty-list'>
         <h3>No saved menus</h3>
         <p>A menu is a collection of recipes and ingredients. Plan your food around a theme, gather up your favourite recipes, or just get a list of produce to grow.</p>
@@ -26,23 +100,44 @@ export const MenuList = memo((): ReactElement => {
             <span>Create your first menu</span>
           </Link>
         </p>
+      </div>;
+  } else {
+    menuList = <>
+      <div className='planner_list'>
+        {allMenus.map(menu =>
+          <Item key={menu.id} menu={menu} />
+        )}
       </div>
-    );
+      <div>
+        <Link to={url.menuNew} className='btn floating'>
+          <AddIcon />
+          <span>Create new menu</span>
+        </Link>
+      </div>
+    </>;
   }
 
-  return <>
-    <div className='planner_list'>
-      {allMenus.map(menu =>
-        <Item key={menu.id} menu={menu}/>
+  return (
+    <div className='planner'>
+      {importState.type === 'error' && (
+        <Notice kind='error'>
+          The page address contains a menu to import, but something went wrong when reading it.
+          {' '}
+          Please make sure you have the <em>entire</em> address.
+          {' '}
+          If it still doesn’t work, please report the error!
+        </Notice>
+      )}
+      {menuList}
+      {importState.type === 'confirm' && (
+        <ImportMenuDialog
+          menu={importState.menu}
+          onImport={handleImport}
+          onCancel={handleCancelImport}
+        />
       )}
     </div>
-    <div>
-      <Link to={url.menuNew} className='btn floating'>
-        <AddIcon/>
-        <span>Create new menu</span>
-      </Link>
-    </div>
-  </>;
+  );
 });
 
 const MaxRecipesInSummary = 10;
@@ -51,10 +146,8 @@ interface ItemProps {
   menu: CookingMenu;
 }
 
-const Item = memo((props: ItemProps): ReactElement => {
-  const {menu} = props;
-
-  const {recipeMap, entityMap, reagentMap} = useGameData();
+const Item = memo(({ menu }: ItemProps): ReactElement => {
+  const { recipeMap, entityMap, reagentMap } = useGameData();
   const url = useUrl();
 
   const recipeSummary = useMemo(() => {

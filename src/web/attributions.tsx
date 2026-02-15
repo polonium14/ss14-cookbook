@@ -39,7 +39,7 @@ export const AttributionsLink = memo(({ value, meta }: Props): ReactElement => {
 
   return <>
     <a href='#' onClick={handleClick}>
-      Pokaż informacje o autorach i licencjach sprite'ów
+      Pokaż informacje o autorach i licencjach sprite&apos;ów
     </a>
     {open && createPortal(
       <AttributionsDialog value={value} meta={meta} onClose={close}/>,

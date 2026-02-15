@@ -99,15 +99,6 @@ export const MenuList = memo((): ReactElement => {
             <AddIcon/>
             <span>Utwórz swoje pierwsze menu</span>
           </Link>
-          <button className='btn' onClick={() => {
-            const clipboardText = prompt('Wklej tutaj swoje menu:');
-            if (clipboardText) {
-              setQuery({ import: clipboardText });
-            }
-          }}>
-            <EditIcon/>
-            <span>Importuj menu ze schowka</span>
-          </button>
         </p>
       </div>;
   } else {

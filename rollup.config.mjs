@@ -127,9 +127,17 @@ const assetRel = kind => {
 // For production builds, generate a random name.
 const randomCssHash = () => Math.random().toString(36).slice(2, 8);
 
+const onwarn = (warning, warn) => {
+  if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+    return;
+  }
+  warn(warning);
+};
+
 export default [
   // Frontend
   {
+    onwarn,
     input: './src/web/index.tsx',
     output: {
       format: 'iife',

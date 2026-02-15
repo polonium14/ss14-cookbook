@@ -6,7 +6,7 @@ import { useGameData } from './context';
 import { FavoriteButton, useIsFavorite } from './favorites';
 import { CloseIcon, FoodSequenceIcon, NodeTreeIcon } from './icons';
 import { getPopupRoot, usePopupTrigger } from './popup-impl';
-import { useCurrentExploredRecipe, useExploreRecipe } from './recipe-explorer';
+import { useCurrentExploredRecipe, useExploreRecipe } from './recipe-explorer/hooks';
 import { RecipeIngredients } from './recipe-ingredients';
 import { RecipeInstructions } from './recipe-instructions';
 import { RecipeMethod } from './recipe-method';

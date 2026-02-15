@@ -1,7 +1,8 @@
-import { ReactElement, Ref, cloneElement } from 'react';
+import { ReactElement, Ref, cloneElement, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { getPopupRoot, usePopupTrigger } from './popup-impl';
-import { Recipe } from './recipe';
+
+const Recipe = lazy(() => import('./recipe').then(m => ({ default: m.Recipe })));
 
 export interface Props {
   id: string | readonly string[];
@@ -23,7 +24,9 @@ export const RecipePopup = ({ id, children }: Props): ReactElement => {
     {childWithRef}
     {visible && createPortal(
       <div className='popup popup--recipe' ref={popupRef}>
-        {typeof id === 'string' ? renderRecipe(id) : id.map(renderRecipe)}
+        <Suspense fallback={<div>Loading...</div>}>
+          {typeof id === 'string' ? renderRecipe(id) : id.map(renderRecipe)}
+        </Suspense>
       </div>,
       getPopupRoot()
     )}

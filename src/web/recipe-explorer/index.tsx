@@ -1,16 +1,16 @@
 import {
   ReactElement,
   ReactNode,
-  useContext,
   useEffect,
   useState,
 } from 'react';
 import {
   ExploreFnContext,
-  ExploreRecipeFn,
   ExploredRecipeContext,
 } from './context';
 import { RecipeExplorer } from './explorer';
+
+export * from './hooks';
 
 export interface Props {
   children: ReactNode;
@@ -37,9 +37,3 @@ export const RecipeExplorerProvider = ({ children }: Props): ReactElement => {
     </ExploreFnContext.Provider>
   );
 };
-
-export const useExploreRecipe = (): ExploreRecipeFn =>
-  useContext(ExploreFnContext);
-
-export const useCurrentExploredRecipe = (): string | null =>
-  useContext(ExploredRecipeContext);

@@ -101,13 +101,13 @@ export const MenuViewer = memo((): ReactElement => {
   const backButton =
     <Link to={url.menuList} className='btn floating'>
       <ArrowLeftIcon/>
-      <span>Back to listing</span>
+      <span>Powrót do listy</span>
     </Link>;
 
   if (!menu) {
     return (
       <div className='planner_view'>
-        <h2>Menu not found</h2>
+        <h2>Nie znaleziono menu</h2>
         <div className='planner_view-actions'>{backButton}</div>
       </div>
     );
@@ -120,24 +120,24 @@ export const MenuViewer = memo((): ReactElement => {
 
   return (
     <div className='planner_view'>
-      <h2>{menu.name.trim() || '(untitled menu)'}</h2>
+      <h2>{menu.name.trim() || '(Menu bez nazwy)'}</h2>
       <div className='planner_view-actions'>
         {backButton}
         <Link to={url.menuEdit(id)} className='btn floating'>
           <EditIcon/>
-          <span>Edit</span>
+          <span>Edytuj</span>
         </Link>
 
         <span className='spacer'/>
 
-        <Tooltip open={exportSuccess} text='Link copied to clipboard!'>
+        <Tooltip open={exportSuccess} text='Link skopiowany do schowka!'>
           <button className='floating' onClick={handleExport}>
             <ExportIcon/>
-            <span>Export</span>
+            <span>Eksportuj</span>
           </button>
         </Tooltip>
         <Notice kind='info'>
-          Your menu is private. Export to share it with others.
+          Twoje menu jest prywatne. Eksportuj, aby udostępnić je innym.
         </Notice>
       </div>
 
@@ -147,7 +147,7 @@ export const MenuViewer = memo((): ReactElement => {
       />
 
       {ingredients.length > 0 && <>
-        <h3>Ingredients</h3>
+        <h3>Składniki</h3>
         <ul className='planner_view-ingredients'>
           {ingredients.map(ingredient =>
             <li key={ingredient.id}>
@@ -171,7 +171,7 @@ export const MenuViewer = memo((): ReactElement => {
         </ul>
       </>}
 
-      <h3>Recipes</h3>
+      <h3>Przepisy</h3>
       <ul className='recipe-list'>
         {menu.recipes.map(id => recipeMap.has(id) ? (
           <li key={id}>

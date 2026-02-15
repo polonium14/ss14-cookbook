@@ -39,12 +39,12 @@ export const SelectedRecipes = memo(({
 
   return (
     <div className='planner_editor-recipes'>
-      <h3>Selected Recipes</h3>
+      <h3>Wybrane przepisy</h3>
       <div className='planner_editor-search'>
         <InputGroup className='planner_editor-query' iconBefore={<SearchIcon/>}>
           <input
             type='search'
-            placeholder='Find new recipes by name'
+            placeholder='Wyszukaj nowe przepisy według nazwy'
             size={1}
             value={query}
             onChange={e => setQuery(e.target.value)}
@@ -71,7 +71,7 @@ export const SelectedRecipes = memo(({
           ) : null)}
         </ul>
       ) : (
-        <p>The menu is currently empty. Search for recipes above to add them!</p>
+        <p>Menu jest obecnie puste. Wyszukaj przepisy powyżej, aby je dodać!</p>
       )}
     </div>
   );
@@ -95,7 +95,7 @@ const MenuRecipe = memo(({
   return (
     <li key={id} className='planner_editor-recipe'>
       <div className='planner_editor-recipe-header'>
-        <Tooltip text='Move up' provideLabel>
+        <Tooltip text='Przenieś w górę' provideLabel>
           <button
             disabled={index === 0}
             onClick={() => onMove(index, -1)}
@@ -103,7 +103,7 @@ const MenuRecipe = memo(({
             <ArrowUpIcon/>
           </button>
         </Tooltip>
-        <Tooltip text='Move down' provideLabel>
+        <Tooltip text='Przenieś w dół' provideLabel>
           <button
             disabled={index === total - 1}
             onClick={() => onMove(index, 1)}

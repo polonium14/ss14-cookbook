@@ -36,7 +36,7 @@ export const Notice = memo(({
       </div>
 
       {id != null && (
-        <Tooltip provideLabel text='Dismiss' placement='left'>
+        <Tooltip provideLabel text='Ukryj' placement='left'>
           <button
             className='notice_dismiss'
             onClick={() => context.dismiss(id)}

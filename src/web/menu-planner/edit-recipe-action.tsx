@@ -16,13 +16,13 @@ export const RecipeAction = ({
   onRemove,
 }: Props): ReactElement => {
   return isSelected ? (
-    <Tooltip text='Remove recipe from menu' provideLabel>
+    <Tooltip text='Usuń przepis z menu' provideLabel>
       <button onClick={() => onRemove?.(id)}>
         <RemoveRecipeIcon/>
       </button>
     </Tooltip>
   ) : (
-    <Tooltip text='Add recipe to menu' provideLabel>
+    <Tooltip text='Dodaj przepis do menu' provideLabel>
       <button onClick={() => onAdd?.(id)}>
         <AddIcon/>
       </button>

@@ -94,7 +94,7 @@ export const RecipeExplorer = memo(({
         >
           <ExploredRecipe id={id} ref={recipeRef}/>
 
-          <Tooltip text='Close recipe explorer' placement='left' provideLabel>
+          <Tooltip text='Zamknij eksplorator przepisów' placement='left' provideLabel>
             <button
               className='explorer_close'
               onClick={() => setRecipe(null)}
@@ -254,7 +254,7 @@ const ExploredRecipe = memo(({
           }
           onClick={() => setActiveSection('madeWith')}
         >
-          <span className='explorer_arrow-label'>Made with</span>
+          <span className='explorer_arrow-label'>Zrobione z</span>
         </div>
         <div
           className={
@@ -281,7 +281,7 @@ const ExploredRecipe = memo(({
           }
           onClick={() => setActiveSection('usedIn')}
         >
-          <span className='explorer_arrow-label'>Used in</span>
+          <span className='explorer_arrow-label'>Użyte w</span>
         </div>
         <div
           className={

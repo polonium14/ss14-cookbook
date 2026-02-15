@@ -29,20 +29,20 @@ export const DiscardChangesDialog = ({
           tabIndex={-1}
           onKeyDown={handleKeyDown}
         >
-          <h2>Unsaved changes</h2>
+          <h2>Niezapisane zmiany</h2>
           <div className='dialog_body thin-scroll'>
-            What do you want to do with your changes?
+            Co chcesz zrobić ze swoimi zmianami?
           </div>
           <div className='dialog_actions'>
             <button onClick={onStay}>
-              Stay here
+              Pozostań tutaj
             </button>
             <span className='spacer'/>
             <button onClick={onSave}>
-              Save changes
+              Zapisz zmiany
             </button>
             <button onClick={onDiscard}>
-              Discard
+              Odrzuć
             </button>
           </div>
         </div>

@@ -27,7 +27,7 @@ export const RecipeResult = memo(({
         <EntitySprite id={solidResult.id}/>
         <span className='recipe_name'>{solidResult.name}</span>
         {resultQty > 1 && (
-          <Tooltip text={`This recipe makes ${resultQty}.`}>
+          <Tooltip text={`Ten przepis tworzy ${resultQty}.`}>
             <span className='recipe_result-qty'>
               {resultQty}
             </span>
@@ -60,5 +60,5 @@ export const RecipeResult = memo(({
       </span>
     );
   }
-  return <span>ERROR!</span>;
+  return <span>BŁĄD!</span>;
 });

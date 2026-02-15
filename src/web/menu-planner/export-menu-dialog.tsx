@@ -39,10 +39,10 @@ export const ExportMenuDialog = ({
           tabIndex={-1}
           onKeyDown={handleKeyDown}
         >
-          <h2>Exported menu</h2>
+          <h2>Wyeksportowane menu</h2>
 
           <div className='dialog_body'>
-            <p>The link below couldn’t be copied to your clipboard. You will need to copy it manually.</p>
+            <p>Nie można skopiować poniższego linku do schowka. Należy skopiować go ręcznie.</p>
             <span className='menu-export_value-sizer'>
               {menuExport}
             </span>
@@ -55,19 +55,19 @@ export const ExportMenuDialog = ({
             <p className='menu-export_action'>
               <button onClick={handleCopy}>
                 <CopyIcon/>
-                <span>Copy</span>
+                <span>Kopiuj</span>
               </button>
 
               {copyState === 'copied' && (
-                <span>Copied to clipboard.</span>
+                <span>Skopiowano do schowka.</span>
               )}
               {copyState === 'failed' && (
-                <span>Could not copy to clipboard.</span>
+                <span>Nie można skopiować do schowka.</span>
               )}
             </p>
           </div>
 
-          <Tooltip text='Close' placement='left' provideLabel>
+          <Tooltip text='Zamknij' placement='left' provideLabel>
             <button className='dialog_close' onClick={onClose}>
               <CloseIcon/>
             </button>

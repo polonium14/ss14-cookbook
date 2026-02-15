@@ -66,26 +66,26 @@ export const ImportMenuDialog = ({
           tabIndex={-1}
           onKeyDown={handleKeyDown}
         >
-          <h2>Import menu</h2>
+          <h2>Importuj menu</h2>
 
           <div className='dialog_body'>
-            <p>It looks like you already have this menu. How would you like to proceed?</p>
+            <p>Wygląda na to, że masz już to menu. Jak chcesz postąpić?</p>
             <ul className='menu-import_actions'>
               <li>
                 <ImportAction
-                  title='Create a new menu'
-                  desc={<>The menu will be imported as <i>{newName}</i>.</>}
+                  title='Utwórz nowe menu'
+                  desc={<>Menu zostanie zaimportowane jako <i>{newName}</i>.</>}
                   icon={<AddIcon/>}
                   onClick={handleImportNew}
                 />
               </li>
               <li>
                 <ImportAction
-                  title='Overwrite the existing menu'
+                  title='Zastąp istniejące menu'
                   desc={<>
-                    The existing menu will be completely replaced.
+                    Istniejące menu zostanie całkowicie zastąpione.
                     {' '}
-                    <strong>This cannot be undone.</strong>
+                    <strong>Ta operacja jest nieodwracalna.</strong>
                   </>}
                   icon={<ImportIcon/>}
                   onClick={() => onImport(menu)}
@@ -93,8 +93,8 @@ export const ImportMenuDialog = ({
               </li>
               <li>
                 <ImportAction
-                  title='Do nothing'
-                  desc='Close this dialog and don’t import the menu.'
+                  title='Nie importuj'
+                  desc='Zamknij to okno i nie importuj menu.'
                   icon={<CloseIcon/>}
                   onClick={onCancel}
                 />

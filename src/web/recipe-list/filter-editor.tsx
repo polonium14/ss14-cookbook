@@ -33,8 +33,8 @@ import {
   filterReagentsByName,
 } from './filter';
 
-const HideRarelyUsedTooltip = 'Hides ingredients that are only used in a single recipe. You can still find all ingredients by name.';
-const GroupFilterTooltip = 'These groups are taken from the game data and are not always correct or intuitive. Each recipe belongs to exactly one group.';
+const HideRarelyUsedTooltip = 'Ukrywa składniki, które są używane tylko w jednym przepisie. Nadal możesz znaleźć wszystkie składniki wpisując ich nazwę.';
+const GroupFilterTooltip = 'Te grupy pochodzą z danych gry i nie zawsze są poprawne lub intuicyjne. Każdy przepis należy dokładnie do jednej grupy.';
 
 export interface Props {
   open: boolean;
@@ -80,7 +80,7 @@ export const FilterEditor = memo(({
           checked={hideRarelyUsed}
           onChange={e => setHideRarelyUsed(e.target.checked)}
         >
-          Hide rarely used ingredients
+          Ukryj rzadko używane składniki
         </Checkbox>
         <Tooltip text={HideRarelyUsedTooltip} provideLabel>
           <span className='recipe-search_help'>
@@ -154,7 +154,7 @@ const MethodFilter = ({ filter, update }: FilterProps): ReactElement => {
   }, []);
 
   return <>
-    <span className='recipe-search_label'>Preparation method:</span>
+    <span className='recipe-search_label'>Metoda przygotowania:</span>
     <ul className='recipe-search_options recipe-search_options--compact'>
       {microwaveSubtypes ? (
         microwaveSubtypes.map(subtype =>
@@ -202,12 +202,36 @@ interface SecondaryMethod {
 }
 
 const SecondaryMethods: readonly SecondaryMethod[] = [
-  { method: 'heat', label: 'Heat', alt: 'grill' },
-  { method: 'deepFry', label: 'Deep fry', alt: 'deep fryer' },
-  { method: 'mix', label: 'Mix', alt: 'beaker' },
-  { method: 'cut', label: 'Cut', alt: 'knife' },
-  { method: 'roll', label: 'Roll', alt: 'rolling pin' },
-  { method: 'construct', label: 'General', alt: '' },
+  {
+    method: 'heat',
+    label: 'Gotowanie',
+    alt: 'grill',
+  },
+  {
+    method: 'deepFry',
+    label: 'Smażenie',
+    alt: 'frytkownica',
+  },
+  {
+    method: 'mix',
+    label: 'Mieszanie',
+    alt: 'zlewka',
+  },
+  {
+    method: 'cut',
+    label: 'Krojenie',
+    alt: 'nóż',
+  },
+  {
+    method: 'roll',
+    label: 'Wałkowanie',
+    alt: 'wałek',
+  },
+  {
+    method: 'construct',
+    label: 'Konstruowanie',
+    alt: '',
+  },
 ];
 
 interface IngredientProps {
@@ -283,7 +307,7 @@ const IngredientFilter = ({
   }, []);
 
   return <>
-    <span className='recipe-search_label'>Solid ingredients:</span>
+    <span className='recipe-search_label'>Składniki stałe:</span>
     <IngredientToolbar
       selectedCount={ingredients.size}
       query={query}
@@ -301,7 +325,7 @@ const IngredientFilter = ({
     >
       {sortedIngredients.length === 0 && (
         <li className='recipe-search_no-match'>
-          Couldn’t find any ingredients matching <i>{query}</i>
+          Nie znaleziono składników pasujących do <i>{query}</i>
         </li>
       )}
       {sortedIngredients.map(id =>
@@ -379,7 +403,7 @@ const ReagentFilter = ({
   }, []);
 
   return <>
-    <span className='recipe-search_label'>Reagent ingredients:</span>
+    <span className='recipe-search_label'>Składniki płynne:</span>
     <IngredientToolbar
       selectedCount={reagents.size}
       query={query}
@@ -397,7 +421,7 @@ const ReagentFilter = ({
     >
       {sortedReagents.length === 0 && (
         <li className='recipe-search_no-match'>
-          Couldn’t find any reagents matching <i>{query}</i>
+          Nie znaleziono reagentów pasujących do <i>{query}</i>
         </li>
       )}
       {sortedReagents.map(reagent =>
@@ -427,7 +451,7 @@ const ModeOption = ({ filter, update }: FilterProps): ReactElement => {
       className='recipe-search_label'
       htmlFor='recipe-filter-mode'
     >
-      Show recipes with:
+      Pokaż przepisy z:
     </label>
     <div className='recipe-search_mode'>
       <select
@@ -435,9 +459,9 @@ const ModeOption = ({ filter, update }: FilterProps): ReactElement => {
         value={filter.ingredientMode}
         onChange={handleChange}
       >
-        <option value='all'>All of the selected ingredients</option>
-        <option value='any'>Any of the selected ingredients</option>
-        <option value='only'>Only the selected ingredients</option>
+        <option value='all'>Wszystkie wybrane składniki</option>
+        <option value='any'>Dowolny z wybranych składników</option>
+        <option value='only'>Tylko wybrane składniki</option>
       </select>
     </div>
   </>;
@@ -464,7 +488,7 @@ const GroupFilter = ({ filter, update }: FilterProps): ReactElement | null => {
 
   return <>
     <span className='recipe-search_label'>
-      Group:
+      Grupa:
     </span>
     <ul className='recipe-search_options recipe-search_options--compact'>
       {recipeGroups.map(group =>
@@ -499,7 +523,7 @@ const TraitFilter = ({ filter, update }: FilterProps): ReactElement => {
 
   return <>
     <span className='recipe-search_label'>
-      Special property:
+      Właściwości specjalne:
     </span>
     <ul className='recipe-search_options recipe-search_options--compact'>
       {specialTraits.map(trait =>
@@ -565,25 +589,25 @@ const IngredientToolbar = ({
   reset,
 }: IngredientToolbarProps): ReactElement =>
   <span className='recipe-search_opt-filter'>
-    {selectedCount > 0 && <span>{selectedCount} selected</span>}
+    {selectedCount > 0 && <span>{selectedCount} wybrano</span>}
     <InputGroup iconBefore={<SearchTextIcon/>}>
       <input
         type='search'
-        placeholder='Search ingredients...'
+        placeholder='Szukaj składników...'
         size={1}
         value={query}
         onChange={e => setQuery(e.target.value)}
       />
     </InputGroup>
     <Tooltip
-      text={expanded ? 'Collapse list' : 'Expand list'}
+      text={expanded ? 'Zwiń listę' : 'Rozwiń listę'}
       provideLabel
     >
       <button onClick={() => setExpanded(x => !x)}>
         {expanded ? <CollapseIcon/> : <ExpandIcon/>}
       </button>
     </Tooltip>
-    <Tooltip text='Clear selected ingredients' provideLabel>
+    <Tooltip text='Wyczyść wybrane składniki' provideLabel>
       <button disabled={selectedCount === 0} onClick={reset}>
         <ResetIcon/>
       </button>

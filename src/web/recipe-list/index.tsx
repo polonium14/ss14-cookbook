@@ -186,7 +186,7 @@ export const RecipeList = memo((): ReactElement => {
             onClick={handleToggleFilter}
           >
             {hasFilter ? <FilterActiveIcon/> : <FilterIcon/>}
-            <span>Filter</span>
+            <span>Filtruj</span>
           </button>
         </Tooltip>
 
@@ -263,7 +263,7 @@ const ResultCount = ({
   if (resultCount > 0) {
     return (
       <p className='recipe-count'>
-        Showing {resultCount} of {totalCount} recipes.
+        Wyświetlono {resultCount} z {totalCount} przepisów.
       </p>
     );
   }
@@ -324,22 +324,22 @@ const describeMethod = (
         return joinListNatural(
           subtypes.map(t => microwaveSubtypes[t].filterSummary),
           ', ',
-          ' or '
-        ) + ' recipes';
+          ' lub '
+        ) + ' przepisów';
       }
-      return 'microwave recipes';
+      return 'przepisy mikrofalowe';
     case 'heat':
-      return 'heating recipes';
+      return 'przepisy gotowane';
     case 'mix':
-      return 'reactions';
+      return 'reakcje';
     case 'cut':
-      return 'cutting recipes';
+      return 'przepisy krojone';
     case 'roll':
-      return 'rolling pin recipes';
+      return 'przepisy wałkowane';
     case 'deepFry': // Frontier
-      return 'deep-frying recipes';
+      return 'przepisy smażone w głębokim tłuszczu';
     case 'construct':
-      return 'general recipes';
+      return 'ogólne przepisy';
   }
 };
 
@@ -349,8 +349,8 @@ const describeFilter = (filter: RecipeFilter): string => {
   if (filter.methods.length > 0) {
     filters.push(
       filter.methods.length === 1
-        ? 'one preparation method'
-        : `${filter.methods.length} preparation methods`
+        ? 'jedna metoda przygotowania'
+        : `${filter.methods.length} metod(y) przygotowania`
     );
   }
 
@@ -360,18 +360,18 @@ const describeFilter = (filter: RecipeFilter): string => {
     switch (filter.ingredientMode) {
       case 'all':
         description = ingredientCount === 1
-          ? 'recipes using the selected ingredient'
-          : `recipes using all ${ingredientCount} selected ingredients`;
+          ? 'przepisy używające wybranego składnika'
+          : `przepisy używające wszystkich ${ingredientCount} wybranych składników`;
         break;
       case 'any':
         description = ingredientCount === 1
-          ? 'recipes using the selected ingredient'
-          : `recipes using any of the ${ingredientCount} selected ingredients`;
+          ? 'przepisy używające wybranego składnika'
+          : `przepisy używające dowolnego z ${ingredientCount} wybranych składników`;
         break;
       case 'only':
         description = ingredientCount === 1
-          ? 'recipes made from only the selected ingredient'
-          : `recipes made from only the ${ingredientCount} selected ingredients`;
+          ? 'przepisy zrobione tylko z wybranego składnika'
+          : `przepisy zrobione tylko z ${ingredientCount} wybranych składników`;
         break;
     }
     filters.push(description);
@@ -381,12 +381,12 @@ const describeFilter = (filter: RecipeFilter): string => {
     const specialsCount = countOnes(filter.specials);
     filters.push(
       specialsCount === 1
-        ? 'one special property'
-        : `${specialsCount} special properties`
+        ? 'jedna właściwość specjalna'
+        : `${specialsCount} właściwości specjalnych`
     );
   }
 
-  return `Filtering by ${joinListNatural(filters, ', ', ' and ')}`;
+  return `Filtrowanie przez ${joinListNatural(filters, ', ', ' i ')}`;
 };
 
 const countOnes = (value: number): number => {

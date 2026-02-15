@@ -23,9 +23,9 @@ export const MenuWarning = ({
     <Notice kind='warning'>
       <p>
         {menuFork !== currentFork &&
-          `This menu was made for a different fork (${
-            targetMenuFork?.name ?? 'not available'
-          }). Recipes and ingredients may be different. `}
+          `To menu zostało stworzone dla innego forka (${
+            targetMenuFork?.name ?? '[niedostępny]'
+          }). Przepisy i składniki mogą się różnić. `}
         {unavailableRecipeCount
           ? unavailableRecipeWarning(unavailableRecipeCount)
           : ''}
@@ -34,5 +34,13 @@ export const MenuWarning = ({
   );
 };
 
-const unavailableRecipeWarning = (count: number) =>
-  `${count} recipe${count > 1 ? 's are' : ' is'} unavailable.`;
+const unavailableRecipeWarning = (count: number) => {
+  if (count === 1) {
+    return '1 przepis jest niedostępny.';
+  }
+  const lastDigit = count % 10;
+  if (lastDigit >= 2 && lastDigit <= 4 && (count < 10 || count > 20)) {
+    return `${count} przepisy są niedostępne.`;
+  }
+  return `${count} przepisów jest niedostępnych.`;
+};

@@ -25,8 +25,8 @@ export const RecipeMethod = memo(({
 
   switch (recipe.method) {
     case 'microwave':
-      text = <span>{recipe.time} sec</span>;
-      spriteAlt = 'microwave';
+      text = <span>{recipe.time} sek</span>;
+      spriteAlt = 'mikrofalówka';
 
       // What a mess of conditionals
       if (microwaveRecipeTypes && recipe.subtype) {
@@ -54,7 +54,7 @@ export const RecipeMethod = memo(({
                   );
                 })}
               </span>
-              <span>Cook</span>
+              <span>Gotuj</span>
               {text}
             </div>
           );
@@ -63,29 +63,29 @@ export const RecipeMethod = memo(({
       break;
     case 'mix':
       text = <>
-        <span>Mix</span>
+        <span>Wymieszaj</span>
         {recipe.minTemp ? (
-          <span>above <Temperature k={recipe.minTemp}/></span>
+          <span>powyżej <Temperature k={recipe.minTemp}/></span>
         ) : null}
         {recipe.maxTemp ? (
-          <span>below <Temperature k={recipe.maxTemp}/></span>
+          <span>poniżej <Temperature k={recipe.maxTemp}/></span>
         ) : null}
       </>;
-      spriteAlt = 'beaker';
+      spriteAlt = 'zlewka';
       break;
     case 'construct':
       switch (recipe.mainVerb) {
         case 'mix':
-          text = <span>Mix</span>;
-          spriteAlt = 'beaker';
+          text = <span>Wymieszaj</span>;
+          spriteAlt = 'zlewka';
           break;
         default:
           return null;
       }
       break;
     case 'deepFry': // Frontier
-      text = <span>Deep fry</span>;
-      spriteAlt = 'deep fry';
+      text = <span>Smaż w głębokim tłuszczu</span>;
+      spriteAlt = 'frytkownica';
       break;
   }
   return (

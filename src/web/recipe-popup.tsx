@@ -24,7 +24,7 @@ export const RecipePopup = ({ id, children }: Props): ReactElement => {
     {childWithRef}
     {visible && createPortal(
       <div className='popup popup--recipe' ref={popupRef}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Ładowanie...</div>}>
           {typeof id === 'string' ? renderRecipe(id) : id.map(renderRecipe)}
         </Suspense>
       </div>,

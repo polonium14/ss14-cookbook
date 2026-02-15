@@ -42,7 +42,7 @@ export const SettingsDialog = ({
     <FocusTrap onPointerDownOutside={onClose}>
       <div className='settings' tabIndex={-1} onKeyDown={handleKeyDown}>
         <div className='settings_name'>
-          Colour scheme:
+          Motyw kolorystyczny:
         </div>
         <OptionGroup
           options={ThemeOptions}
@@ -51,7 +51,7 @@ export const SettingsDialog = ({
         />
 
         <div className='settings_name'>
-          Temperature unit:
+          Jednostka temperatury:
         </div>
         <OptionGroup
           options={TemperatureUnitOptions}
@@ -76,15 +76,15 @@ const ThemeOptions: readonly Option<ThemeSetting>[] = [
 
 const TemperatureUnitOptions: readonly Option<TemperatureUnitSetting>[] = [
   {
-    name: 'Kelwin (K)',
+    name: 'Kelwiny (K)',
     value: 'kelvin',
   },
   {
-    name: 'Celsjusz (°C)',
+    name: 'Celsjusze (°C)',
     value: 'celsius',
   },
   {
-    name: 'Fahrenheit (°F)',
+    name: 'Fahrenheity (°F)',
     value: 'fahrenheit',
   },
 ];

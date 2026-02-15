@@ -75,7 +75,7 @@ interface StartStepProps {
 
 const StartStep = ({ step }: StartStepProps): ReactElement =>
   <li className='recipe_step recipe_step--compact'>
-    Weź <SolidIngredient id={step.entity}/>
+    Zacznij od <SolidIngredient id={step.entity}/>
   </li>;
 
 interface EndStepProps {
@@ -86,7 +86,7 @@ const EndStep = ({ step }: EndStepProps): ReactElement => {
   if (typeof step.entity === 'string') {
     return (
       <li className='recipe_step recipe_step--compact'>
-        Finish with <SolidIngredient id={step.entity}/>
+        Zakończ z <SolidIngredient id={step.entity}/>
       </li>
     );
   } else {
@@ -109,11 +109,12 @@ const MixStep = ({ step, visible }: MixStepProps): ReactElement => {
   // I really wish JS had a better way of traversing objects.
   const keys = Object.keys(step.reagents);
   if (keys.length === 1) {
+    keys.sort(); // Consistent order
     const id = keys[0];
     const ingredient = step.reagents[id];
     return (
       <li className='recipe_step recipe_step--compact'>
-        {'Take '}
+        {'Dodaj '}
         <ReagentIngredient
           id={id}
           amount={ingredient.amount}
@@ -124,7 +125,7 @@ const MixStep = ({ step, visible }: MixStepProps): ReactElement => {
   } else {
     return (
       <li className='recipe_step recipe_step--mix'>
-        <div>Mix:</div>
+        <div>Wymieszaj:</div>
         <RecipeIngredients
           visible={visible}
           reagents={step.reagents}
@@ -200,7 +201,7 @@ const HeatStep = ({ step }: HeatStepProps): ReactElement => {
   return (
     <li className='recipe_step recipe_step--simple'>
       <RawSprite position={methodSprites.heat!} alt=''/>
-      Heat it to <Temperature k={step.minTemp}/>
+      Podgrzej do <Temperature k={step.minTemp}/>
     </li>
   );
 };
@@ -216,9 +217,9 @@ const HeatMixtureStep = ({ step }: HeatMixtureStepProps): ReactElement => {
       <RawSprite position={methodSprites.heatMixture!} alt=''/>
       {' '}
       {step.maxTemp != null ? <>
-        Heat it to between <Temperature k={step.minTemp}/> and <Temperature k={step.maxTemp}/>
+        Podgrzej do temperatury pomiędzy <Temperature k={step.minTemp}/> a <Temperature k={step.maxTemp}/>
       </> : <>
-        Heat it to <Temperature k={step.minTemp}/>
+        Podgrzej do <Temperature k={step.minTemp}/>
       </>}
     </li>
   );
@@ -254,13 +255,13 @@ const AlsoMakesStep = ({ step }: AlsoMakesStepProps): ReactElement => {
   if (typeof step.entity === 'string') {
     return (
       <li className='recipe_step recipe_step--compact recipe_step--also'>
-        Also makes <SolidIngredient id={step.entity}/>
+        Tworzy również <SolidIngredient id={step.entity}/>
       </li>
     );
   } else {
     return (
       <li className='recipe_step recipe_step--add recipe_step--also'>
-        <span>Also makes:</span>
+        <span>Tworzy również:</span>
         {step.entity.map(id => <SolidIngredient key={id} id={id}/>)}
       </li>
     );

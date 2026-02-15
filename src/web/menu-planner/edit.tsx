@@ -183,7 +183,7 @@ export const MenuEditor = (): ReactElement => {
     if (isDirty) {
       const onBeforeUnload = (e: BeforeUnloadEvent) => {
         e.preventDefault();
-        e.returnValue = "You have unsaved changes. Discard?";
+        e.returnValue = "Masz niezapisane zmiany. Czy chcesz je odrzucić?";
       };
       window.addEventListener('beforeunload', onBeforeUnload);
       return () => {
@@ -200,11 +200,11 @@ export const MenuEditor = (): ReactElement => {
   if (!menu) {
     return (
       <div className='planner_view'>
-        <h2>Menu not found</h2>
+        <h2>Nie znaleziono menu</h2>
         <div className='planner_view-actions'>
           <Link to={url.menuList} className='btn floating'>
             <ArrowLeftIcon/>
-            <span>Back to listing</span>
+            <span>Powrót do listy</span>
           </Link>
         </div>
       </div>
@@ -220,11 +220,11 @@ export const MenuEditor = (): ReactElement => {
   return (
     <div className='planner_editor'>
       <div className='planner_editor-header'>
-        <label htmlFor={`${htmlId}-name`}>Name:</label>
+        <label htmlFor={`${htmlId}-name`}>Nazwa:</label>
         <input
           id={`${htmlId}-name`}
           type='text'
-          placeholder={`E.g.: ${exampleName}`}
+          placeholder={`Np.: ${exampleName}`}
           value={menu.name}
           onChange={handleChangeName}
         />
@@ -306,12 +306,12 @@ const isMenuDirty = (
 };
 
 const ExampleNames = [
-  'Favourite recipes',
-  'Ultimate Cake Collection',
-  'Burgers and Pizzas',
-  'Soups, Stews, Salads and Stuff',
-  'Assorted basics',
-  'I have no botanist and I must cook',
+  'Ulubione przepisy',
+  'Kolekcja najlepszych ciast',
+  'Burgery i pizze',
+  'Zupy, gulasze, sałatki i inne',
+  'Różne podstawowe potrawy',
+  'Nie mam botanika i muszę gotować',
 ];
 
 interface ActionsProps {
@@ -330,27 +330,27 @@ const Actions = ({
   onDelete,
 }: ActionsProps): ReactElement =>
   <div className='planner_editor-actions'>
-    <Tooltip text='Save the menu and close the editor'>
+    <Tooltip text='Zapisz menu i zamknij edytor'>
       <button onClick={onSave}>
         <SaveIcon/>
-        <span>Save</span>
+        <span>Zapisz</span>
       </button>
     </Tooltip>
 
     <ConfirmButton
       tooltip={isNew
-        ? 'Discard everything and return to the list'
-        : 'Discard all changes and close the editor'
+        ? 'Odrzuć wszystko i wróć do listy'
+        : 'Odrzuć wszystkie zmiany i zamknij edytor'
       }
       timeout={isDirty ? 400 : 150}
       onClick={onDiscard}
     >
-      Discard
+      Odrzuć
     </ConfirmButton>
 
     {!isNew && (
-      <ConfirmButton tooltip='Delete the menu' onClick={onDelete}>
-        Delete
+      <ConfirmButton tooltip='Usuń menu' onClick={onDelete}>
+        Usuń
       </ConfirmButton>
     )}
   </div>;

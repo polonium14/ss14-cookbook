@@ -112,8 +112,8 @@ export const Recipe = memo(({
 });
 
 const FoodSequenceStartTooltip =
-  'Możesz umieścić inne jedzenie w tym.\n' +
-  'Kliknij, aby zobaczyć, co można do niego włożyć.';
+  'Możesz umieścić w tym inne jedzenie.\n' +
+  'Kliknij, co można do środka wsadzić.';
 
 const defaultHeaderAction = (
   recipe: RecipeData,
@@ -164,11 +164,11 @@ const SeqElemIcon = memo(({
 }: SeqElemIconProps): ReactElement => {
   const tooltipContent = useMemo(() => <>
     {seqElem && <>
-      <p>You can put this food inside:</p>
+      <p>Możesz włożyć to jedzenie do środka:</p>
       <SeqElemList sequences={seqElem}/>
     </>}
     {seqEnd && <>
-      <p>This food can finish off:</p>
+      <p>To jedzenie może zakończyć:</p>
       <SeqElemList sequences={seqEnd}/>
     </>}
   </>, [seqElem, seqEnd]);

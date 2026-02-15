@@ -26,7 +26,7 @@ export const PrivacyPolicyLink = memo((): ReactElement => {
 
   return <>
     <a href='#' onClick={handleClick}>
-      Privacy policy
+      Polityka prywatności
     </a>
     {open && createPortal(
       <PrivacyPolicyDialog onClose={close}/>,
@@ -55,12 +55,12 @@ const PrivacyPolicyDialog = memo(({
     <Overlay>
       <FocusTrap onPointerDownOutside={onClose}>
         <section className='dialog privacy' ref={ref} tabIndex={-1}>
-          <h2>Privacy policy</h2>
+          <h2>Polityka prywatności</h2>
           <div
             className='privacy_text thin-scroll'
             dangerouslySetInnerHTML={{__html: PRIVACY_POLICY_HTML}}
           />
-          <Tooltip text='Close' placement='left' provideLabel>
+          <Tooltip text='Zamknij' placement='left' provideLabel>
             <button className='dialog_close' onClick={onClose}>
               <CloseIcon/>
             </button>

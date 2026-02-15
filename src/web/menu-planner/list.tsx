@@ -92,13 +92,22 @@ export const MenuList = memo((): ReactElement => {
   if (allMenus.length === 0) {
     menuList =
       <div className='planner_empty-list'>
-        <h3>No saved menus</h3>
-        <p>A menu is a collection of recipes and ingredients. Plan your food around a theme, gather up your favourite recipes, or just get a list of produce to grow.</p>
+        <h3>Brak zapisanych menu</h3>
+        <p>Menu to zbiór przepisów i składników. Planuj swoje posiłki wokół tematu, zbieraj ulubione przepisy lub po prostu uzyskaj listę produktów do uprawy.</p>
         <p>
           <Link to={url.menuNew} className='btn'>
             <AddIcon/>
-            <span>Create your first menu</span>
+            <span>Utwórz swoje pierwsze menu</span>
           </Link>
+          <button className='btn' onClick={() => {
+            const clipboardText = prompt('Wklej tutaj swoje menu:');
+            if (clipboardText) {
+              setQuery({ import: clipboardText });
+            }
+          }}>
+            <EditIcon/>
+            <span>Importuj menu ze schowka</span>
+          </button>
         </p>
       </div>;
   } else {
@@ -111,7 +120,7 @@ export const MenuList = memo((): ReactElement => {
       <div>
         <Link to={url.menuNew} className='btn floating'>
           <AddIcon />
-          <span>Create new menu</span>
+          <span>Utwórz nowe menu</span>
         </Link>
       </div>
     </>;
@@ -121,11 +130,11 @@ export const MenuList = memo((): ReactElement => {
     <div className='planner'>
       {importState.type === 'error' && (
         <Notice kind='error'>
-          The page address contains a menu to import, but something went wrong when reading it.
+          Adres strony zawiera menu do zaimportowania, ale wystąpił problem podczas jego odczytu.
           {' '}
-          Please make sure you have the <em>entire</em> address.
+          Upewnij się, że masz <em>cały</em> adres.
           {' '}
-          If it still doesn’t work, please report the error!
+          Jeśli nadal nie działa, zgłoś błąd!
         </Notice>
       )}
       {menuList}

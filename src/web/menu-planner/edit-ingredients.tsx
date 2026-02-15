@@ -35,7 +35,7 @@ export const IngredientList = memo(({
   }, [availableIngredients, entityMap, reagentMap]);
 
   return <>
-    <h3>Ingredients</h3>
+    <h3>Składniki</h3>
     {sortedIngredients.length > 0 ? (
       <ul className='planner_editor-ingredient-list'>
         {sortedIngredients.map(ingredient =>
@@ -49,8 +49,8 @@ export const IngredientList = memo(({
         )}
       </ul>
     ) : <>
-      <p>When you add recipes to the menu, their ingredients will show up here. This list will also include ingredients used in recipes for other ingredients.</p>
-      <p>You can hide ingredients you don’t want to see, and add their recipes (when available) to your menu.</p>
+      <p>Kiedy dodasz przepisy do menu, ich składniki pojawią się tutaj. Ta lista będzie również zawierać składniki użyte w przepisach na inne składniki.</p>
+      <p>Możesz ukryć składniki, których nie chcesz widzieć, i dodać ich przepisy (jeśli są dostępne) do swojego menu.</p>
     </>}
   </>;
 });
@@ -79,7 +79,7 @@ const Ingredient = memo(({
       reagentMap.get(id)!.name
     );
     reagentNames.sort((a, b) => NeutralCollator.compare(a, b));
-    return `Source of: ${reagentNames.join(', ')}`;
+    return `Źródło: ${reagentNames.join(', ')}`;
   }, [ingredient, reagentMap]);
 
   const usedByText = useMemo(() => {
@@ -93,7 +93,7 @@ const Ingredient = memo(({
       )
     );
     recipeNames.sort((a, b) => NeutralCollator.compare(a, b));
-    return `Used by: ${recipeNames.join(', ')}`;
+    return `Używane przez: ${recipeNames.join(', ')}`;
   }, [ingredient, recipeMap, entityMap, reagentMap]);
 
   const tooltipText = `${sourceOfText}\n${usedByText}`.trim();
@@ -106,10 +106,10 @@ const Ingredient = memo(({
           : 'planner_editor-ingredient'
       }
     >
-      <Tooltip text={visible ? 'Hide this ingredient' : 'Show this ingredient'}>
+      <Tooltip text={visible ? 'Ukryj ten składnik' : 'Pokaż ten składnik'}>
         <button
           className='planner_editor-ingredient-toggle'
-          aria-label='Hide this ingredient'
+          aria-label='Ukryj ten składnik'
           aria-pressed={!visible}
           onClick={() => onToggleVisible(ingredient.id)}
         >
@@ -162,8 +162,8 @@ const AddRecipeButton = memo(({
   const n = index + 1;
 
   const ariaLabel = totalCount > 1
-    ? `Add recipe ${n} for this ingredient to the menu`
-    : 'Add the recipe for this ingredient to the menu';
+    ? `Dodaj przepis ${n} dla tego składnika do menu`
+    : 'Dodaj przepis dla tego składnika do menu';
 
   return <>
     <button

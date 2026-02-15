@@ -39,7 +39,7 @@ export const AttributionsLink = memo(({ value, meta }: Props): ReactElement => {
 
   return <>
     <a href='#' onClick={handleClick}>
-      Show sprite credits and licenses
+      Pokaż informacje o autorach i licencjach sprite'ów
     </a>
     {open && createPortal(
       <AttributionsDialog value={value} meta={meta} onClose={close}/>,
@@ -71,9 +71,9 @@ const AttributionsDialog = memo(({
     <Overlay>
       <FocusTrap onPointerDownOutside={onClose}>
         <section className='dialog attributions' ref={ref} tabIndex={-1}>
-          <h2>Sprite credits</h2>
+          <h2>Informacje o autorach</h2>
 
-          <p><i>Clickable links in the</i> Copyright <i>field are a best-faith interpretation and not guaranteed to be correct.</i></p>
+          <p><i>Linki w polu</i> Prawa autorskie <i>są interpretacją w najlepszej wierze i nie gwarantuje się ich poprawności.</i></p>
 
           <ul className='attributions_list thin-scroll'>
             {value.map(attr =>
@@ -81,7 +81,7 @@ const AttributionsDialog = memo(({
             )}
           </ul>
 
-          <Tooltip text='Close' placement='left' provideLabel>
+          <Tooltip text='Zamknij' placement='left' provideLabel>
             <button className='dialog_close' onClick={onClose}>
               <CloseIcon/>
             </button>
@@ -112,12 +112,12 @@ const AttributionItem = ({ attr, meta }: AttributionItemProps) => {
         )}
       </div>
       <p>
-        <b>Path:</b>
+        <b>Ścieżka:</b>
         {' '}
         <a href={pathUrl} target='_blank' rel="noopener noreferrer">{attr.path}</a>
       </p>
-      <p><b>License:</b> <LicenseText license={attr.license}/></p>
-      <p><b>Copyright:</b> <CopyrightText copyright={attr.copyright}/></p>
+      <p><b>Licencja:</b> <LicenseText license={attr.license}/></p>
+      <p><b>Prawa autorskie:</b> <CopyrightText copyright={attr.copyright}/></p>
     </li>
   );
 };

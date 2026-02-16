@@ -51,14 +51,14 @@ export const SeqStartPoint = memo(({
           </RecipePopup>
         ) : entity.name}
       </strong>
-      {` accepts up to ${seqStart.maxCount} of:`}
+      {` przyjmuje do ${seqStart.maxCount} składników:`}
     </p>
     <ul className='foodseq_elements'>
       {elements.map(id => <SeqElement key={id} id={id}/>)}
     </ul>
 
     {endPoints && endPoints.length > 0 && <>
-      <p>and can be finished with one of:</p>
+      <p>i można je zakończyć jednym z:</p>
       <ul className='foodseq_elements'>
         {endPoints.map(id => <SeqElement key={id} id={id}/>)}
       </ul>

@@ -28,7 +28,7 @@ export const FoodSequences = memo((): ReactElement => {
 
   return (
     <main className='foodseq'>
-      <p>Niektóre produkty spożywcze mogą mieć w sobie umieszczone inne przedmioty, zazwyczaj jedzenie – lub, w przypadku bułek do burgerów, na nich. Trzymaj składnik w dłoni i kliknij na odbiorcę. W niektórych miejscach ten system jest nazywany <i>sekwencjami jedzenia</i>.</p>
+      <p>Niektóre potrawy mogą zawierać dodatki, zazwyczaj w postaci innych produktów spożywczych, które można włożyć do środka lub, w przypadku bułek do burgerów, położyć na wierzchu. Trzymaj składnik w dłoni i kliknij odbiornik. W niektórych miejscach system ten nazywany jest <i>sekwencjami żywnościowymi</i>.</p>
 
       <ul className='foodseq_list'>
         {startPoints.map(ent =>

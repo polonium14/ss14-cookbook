@@ -106,7 +106,7 @@ export const App = ({ forks }: Props): ReactElement => {
               <a href={commitLink} target='_blank' rel="noopener noreferrer">
                 {meta.commit.slice(0, 9)}
               </a>
-              {` on ${formatDate(meta.date)}.`}
+              {` dnia ${formatDate(meta.date)}.`}
             </p>
             <p>
               Stworzone przez Alice Heurlin / Arimah, 2024.
@@ -121,7 +121,7 @@ export const App = ({ forks }: Props): ReactElement => {
             <p>
               <PrivacyPolicyLink/>
               {' • '}
-              <a href={REPO_URL} target='_blank' rel="noopener noreferrer">Source code</a>
+              <a href={REPO_URL} target='_blank' rel="noopener noreferrer">Kod źródłowy</a>
             </p>
           </footer>
           <CanonicalRedirect/>
@@ -163,5 +163,5 @@ const formatDate = (timestamp: number): string => {
   const minute = date.getMinutes().toString().padStart(2, '0');
   const second = date.getSeconds().toString().padStart(2, '0');
 
-  return `${year}-${month}-${day} at ${hour}:${minute}:${second}`;
+  return `${day}.${month}.${year} o ${hour}:${minute}:${second}`;
 };

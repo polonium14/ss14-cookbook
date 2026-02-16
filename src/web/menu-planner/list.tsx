@@ -93,7 +93,7 @@ export const MenuList = memo((): ReactElement => {
     menuList =
       <div className='planner_empty-list'>
         <h3>Brak zapisanych menu</h3>
-        <p>Menu to zbiór przepisów i składników. Planuj swoje posiłki wokół tematu, zbieraj ulubione przepisy lub po prostu uzyskaj listę produktów do uprawy.</p>
+        <p>Menu to zbiór przepisów i składników. Zaplanuj posiłki zgodnie z wybranym motywem przewodnim, zbierz ulubione przepisy lub po prostu sporządź listę produktów, które chcesz uprawiać.</p>
         <p>
           <Link to={url.menuNew} className='btn'>
             <AddIcon/>

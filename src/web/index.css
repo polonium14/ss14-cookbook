@@ -2203,6 +2203,9 @@ select {
     gap: 2px;
     min-width: 300px;
     max-width: 400px;
+
+    /* EPopups */
+    pointer-events: auto;
   }
 
     .popup--recipe > .recipe {

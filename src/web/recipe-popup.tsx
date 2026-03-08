@@ -13,7 +13,9 @@ export interface Props {
 
 export const RecipePopup = ({ id, children }: Props): ReactElement => {
   const { visible, popupRef, parentRef } = usePopupTrigger<HTMLDivElement>(
-    'below'
+    'below',
+    undefined,
+    { interactive: true }
   );
 
   const childWithRef = cloneElement(children, {

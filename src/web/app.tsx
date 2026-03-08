@@ -9,7 +9,6 @@ import { FetchError } from './fetch-error';
 import { ForkProvider } from './fork-context';
 import { GitHubCommitUrl } from './helpers';
 import { NoticesProvider } from './notices';
-import { PrivacyPolicyLink } from './privacy';
 import { RecipeExplorerProvider } from './recipe-explorer';
 import { NoticeData } from './types';
 import { UrlProvider } from './url';
@@ -117,11 +116,6 @@ export const App = ({ forks }: Props): ReactElement => {
               {'Sprite\'y zostały stworzone przez wielu kontrybutorów: '}
               <AttributionsLink value={data.attributions} meta={meta}/>
               {'.'}
-            </p>
-            <p>
-              <PrivacyPolicyLink/>
-              {' • '}
-              <a href={REPO_URL} target='_blank' rel="noopener noreferrer">Kod źródłowy</a>
             </p>
           </footer>
           <CanonicalRedirect/>

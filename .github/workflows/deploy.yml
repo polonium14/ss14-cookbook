@@ -1,0 +1,131 @@
+name: Deploy cookbook
+
+# Rebuilds the frontend and recipe data, packages them into a files-only image
+# (see Dockerfile) and pushes it to ghcr.io/<this repository>. The server
+# picks up new images by itself (docker/update.sh from cron) and copies the
+# files into the host web server's root, so CI needs no access to the server.
+#
+# Triggers:
+# - the game repository changes game data on master -> repository_dispatch
+#   (see .github/workflows/cookbook-trigger.yml in polonium-station)
+# - cookbook code/config changes land on master
+# - manual run from the Actions tab (or `gh workflow run deploy.yml`)
+#
+# Repository variables (Settings -> Secrets and variables -> Actions):
+#   GAME_REPO               required, e.g. polonium14/polonium-station
+#   COOKBOOK_BASE_PATH      public path prefix, e.g. /serwis/cookbook
+#   COOKBOOK_REPO_URL       footer link to the cookbook source
+#   COOKBOOK_TRUSTED_HOSTS  space-separated hosts trusted for auto-import
+#   COOKBOOK_CANONICAL_URL  optional
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [polonium-updated]
+  push:
+    branches: [master]
+    paths:
+      - 'src/**'
+      - 'public/img/**'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'sources.yml'
+      - 'rewrites_*.yml'
+      - 'rollup.config.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy.yml'
+
+concurrency:
+  group: deploy-cookbook
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    name: Build and publish image
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check configuration
+        env:
+          GAME_REPO: ${{ vars.GAME_REPO }}
+        run: |
+          if [ -z "$GAME_REPO" ]; then
+            echo "::error::Repository variable GAME_REPO is not set"
+            exit 1
+          fi
+
+      - name: Checkout cookbook
+        uses: actions/checkout@v7
+        with:
+          path: cookbook
+
+      - name: Checkout game repository
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ vars.GAME_REPO }}
+          ref: ${{ github.event.client_payload.sha || 'master' }}
+          path: repo
+          sparse-checkout: |
+            Resources/Prototypes
+            Resources/Textures
+            Resources/Locale/pl-PL
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: cookbook/package-lock.json
+
+      - name: Install dependencies
+        working-directory: cookbook
+        run: npm ci
+
+      - name: Write .env
+        working-directory: cookbook
+        env:
+          COOKBOOK_BASE_PATH: ${{ vars.COOKBOOK_BASE_PATH }}
+          COOKBOOK_REPO_URL: ${{ vars.COOKBOOK_REPO_URL }}
+          COOKBOOK_TRUSTED_HOSTS: ${{ vars.COOKBOOK_TRUSTED_HOSTS }}
+          COOKBOOK_CANONICAL_URL: ${{ vars.COOKBOOK_CANONICAL_URL }}
+        run: |
+          {
+            echo "COOKBOOK_BASE_PATH=$COOKBOOK_BASE_PATH"
+            echo "COOKBOOK_REPO_URL=$COOKBOOK_REPO_URL"
+            echo "COOKBOOK_TRUSTED_HOSTS=$COOKBOOK_TRUSTED_HOSTS"
+            echo "COOKBOOK_CANONICAL_URL=$COOKBOOK_CANONICAL_URL"
+          } > .env
+
+      - name: Build site
+        working-directory: cookbook
+        run: npm run build
+
+      - name: Generate recipes
+        working-directory: cookbook
+        run: npm run gen:recipes
+
+      - name: Build image
+        working-directory: cookbook
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          game_sha=$(git -C ../repo rev-parse HEAD)
+          docker build \
+            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --label "ss14.cookbook.game-revision=$game_sha" \
+            --tag "$image:latest" \
+            --tag "$image:${GITHUB_SHA::7}-${game_sha::7}" \
+            .
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
+
+      - name: Push image
+        env:
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$REGISTRY_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker push --all-tags "$IMAGE"

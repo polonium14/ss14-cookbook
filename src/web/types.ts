@@ -27,7 +27,6 @@ export const isDisplayMethod = (value: unknown): value is DisplayMethod => {
     case 'roll':
     case 'heat':
     case 'deepFry':
-    case 'construct':
       return true;
     default:
       return false;

@@ -50,6 +50,7 @@ export default [
         setInterval: 'readonly',
         clearInterval: 'readonly',
         getComputedStyle: 'readonly',
+        performance: 'readonly',
         IS_DEV: 'readonly',
         BASE_PATH: 'readonly',
         REPO_URL: 'readonly',
@@ -86,6 +87,7 @@ export default [
       'react-hooks/use-memo': 'off',
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/purity': 'off',
+      'react-hooks/immutability': 'off',
     },
     settings: {
       react: {

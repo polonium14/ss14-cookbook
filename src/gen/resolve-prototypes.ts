@@ -9,13 +9,14 @@ import {
 } from './constants';
 import { ConstructRecipeBuilder } from './construct-recipe-builder';
 import { PrunedGameData } from './filter-relevant';
-import { readFileTextWithoutTheStupidBOM } from './helpers';
+import { readFileTextWithoutTheStupidBOM, recipeSolids } from './helpers';
 import {
   EntityId,
   MicrowaveMealRecipe,
   Reactant,
   ReactionPrototype,
   ReagentId,
+  StackMap,
 } from './prototypes';
 import { getReagentResult, getSolidResult } from './reaction-helpers';
 import {
@@ -55,6 +56,7 @@ export const resolvePrototypes = (
       .find(([k, v]) => v.default)
       ?.[0];
 
+  const anyRecipeHasStacks = filtered.recipes.some(r => r.stacks != null);
   for (const recipe of filtered.recipes) {
     recipes.set(recipe.id, {
       method: 'microwave',
@@ -62,7 +64,12 @@ export const resolvePrototypes = (
       solidResult: recipe.result,
       reagentResult: null,
       resultQty: recipe.resultCount, // Frontier
-      solids: recipe.solids ?? {},
+      solids: convertMicrowaveSolids(
+        recipe,
+        filtered.stacks,
+        anyRecipeHasStacks,
+        filtered.entities
+      ),
       reagents: recipe.reagents
         ? convertMicrowaveReagents(recipe.reagents)
         : {},
@@ -157,6 +164,24 @@ const createFluentBundle = (localeDir: string): FluentBundle => {
   }
 
   return bundle;
+};
+
+const convertMicrowaveSolids = (
+  recipe: MicrowaveMealRecipe,
+  stacks: StackMap,
+  anyRecipeHasStacks: boolean,
+  entities: ReadonlyMap<EntityId, unknown>
+): Record<EntityId, number> => {
+  const result: Record<EntityId, number> = {};
+  for (const [id, qty] of recipeSolids(
+    recipe,
+    stacks,
+    anyRecipeHasStacks,
+    entities
+  )) {
+    result[id] = qty;
+  }
+  return result;
 };
 
 const convertMicrowaveReagents = (

@@ -1,5 +1,12 @@
 import { readFileSync } from 'node:fs';
-import { EntityId, EntityMap, EntityPrototype } from './prototypes';
+import {
+  EntityId,
+  EntityMap,
+  EntityPrototype,
+  MicrowaveMealRecipe,
+  StackId,
+  StackMap,
+} from './prototypes';
 
 /**
  * Synchronously reads a file as a string, assuming its contents are UTF-8,
@@ -42,6 +49,40 @@ function* parents(
     }
   }
   // Otherwise, nothing
+}
+
+export function* recipeSolids(
+  recipe: MicrowaveMealRecipe,
+  stacks: StackMap,
+  anyRecipeHasStacks: boolean,
+  // POLONIUM CHANGE --->
+  // If an ID is both a stack and an entity (e.g. Paper), prefer the entity.
+  entities: ReadonlyMap<EntityId, unknown>
+  // <--- POLONIUM CHANGE
+): Generator<[EntityId, number]> {
+  if (recipe.solids) {
+    for (const [id, qty] of Object.entries(recipe.solids)) {
+      // POLONIUM CHANGE --->
+      const stack =
+        !anyRecipeHasStacks &&
+        !entities.has(id as EntityId) &&
+        stacks.get(id as StackId);
+      // <--- POLONIUM CHANGE
+      if (stack) {
+        yield [stack.spawn, qty];
+      } else {
+        yield [id as EntityId, qty];
+      }
+    }
+  }
+  if (recipe.stacks) {
+    for (const [id, qty] of Object.entries(recipe.stacks)) {
+      const stack = stacks.get(id as StackId);
+      if (stack) {
+        yield [stack.spawn, qty];
+      }
+    }
+  }
 }
 
 export interface MapToObjectFn {

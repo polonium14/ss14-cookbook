@@ -2,6 +2,7 @@ import { OneOrMoreEntities } from '../types';
 import { EntitySpawnEntry, Solution } from './components';
 import { DefaultRecipeGroup, MixerCategoryToStepType } from './constants';
 import { ConstructRecipeBuilder } from './construct-recipe-builder';
+import { recipeSolids } from './helpers';
 import {
   ConstructionGraphMap,
   EntityId,
@@ -41,6 +42,7 @@ export interface PrunedGameData {
   readonly foodSequenceStartPoints: ReadonlyMap<TagId, readonly EntityId[]>;
   readonly foodSequenceElements: ReadonlyMap<TagId, readonly EntityId[]>;
   readonly foodSequenceEndPoints: ReadonlyMap<TagId, readonly EntityId[]>;
+  readonly stacks: StackMap;
 }
 
 export interface FilterParams {
@@ -173,6 +175,7 @@ export const filterRelevantPrototypes = (
     foodSequenceStartPoints: foodSequences.startPoints,
     foodSequenceElements: foodSequences.elements,
     foodSequenceEndPoints: foodSequences.endPoints,
+    stacks: raw.stacks,
   };
 };
 
@@ -185,23 +188,24 @@ const collectMicrowaveRecipes = (
   ignoredRecipes: ReadonlySet<string>
 ): MicrowaveMealRecipe[] => {
   const relevantRecipes = allRecipes.filter(r => !ignoredRecipes.has(r.id));
+
+  // If any recipe has a `stacks`, then we must *not* try to resolve solids
+  // as stack IDs. Otherwise, `solids` keys may be stack or entity IDs.
+  const anyRecipeHasStacks = relevantRecipes.some(r => r.stacks != null);
+
   for (const recipe of relevantRecipes) {
     if (ignoredRecipes.has(recipe.id)) {
       continue;
     }
     usedEntities.add(recipe.result);
 
-    if (recipe.solids) {
-      for (const id of Object.keys(recipe.solids)) {
-        const stack = stacks.get(id as StackId);
-        // POLONIUM CHANGE --->
-        if (stack && !allEntities.has(id as EntityId)) {
-        // <--- POLONIUM CHANGE
-          usedEntities.add(stack.spawn);
-        } else {
-          usedEntities.add(id as EntityId);
-        }
-      }
+    for (const [id] of recipeSolids(
+      recipe,
+      stacks,
+      anyRecipeHasStacks,
+      allEntities
+    )) {
+      usedEntities.add(id);
     }
 
     if (recipe.reagents) {
@@ -831,7 +835,7 @@ const collectReagentSources = (
           continue;
         }
 
-        appendAtKey(result, reagentId, entity.id);
+        appendAtKey(result, reagentId, entity.id, true);
       }
     }
   }
@@ -843,7 +847,7 @@ const collectReagentSources = (
 
     for (const entityId of sources) {
       usedEntities.add(entityId);
-      appendAtKey(result, reagentId, entityId);
+      appendAtKey(result, reagentId, entityId, true);
     }
   }
 
@@ -932,11 +936,18 @@ const collectFoodSequences = (
   return { startPoints, elements, endPoints };
 };
 
-const appendAtKey = <K, V>(map: Map<K, V[]>, key: K, value: V): void => {
+const appendAtKey = <K, V>(
+  map: Map<K, V[]>,
+  key: K,
+  value: V,
+  unique = false
+): void => {
   let values = map.get(key);
   if (!values) {
     values = [];
     map.set(key, values);
   }
-  values.push(value);
+  if (!unique || !values.includes(value)) {
+    values.push(value);
+  }
 };
